@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ir_mbshr_req_applgain" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="403a235e-8311-41dd-9e09-749bfa7f1f75">
+	<property name="ireport.zoom" value="5.559917313492259"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="345"/>
+	<parameter name="as_coop_id" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="as_appl_docno" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+mr.COOP_ID ,
+mr.APPL_DOCNO ,
+mr.MEMB_NAME ,
+mr.MEMB_SURNAME ,
+mr.CARD_PERSON ,
+mr.ADDRESS_NO ,
+mr.ADDRESS_MOO ,
+mr.ADDRESS_SOI ,
+mr.ADDRESS_VILLAGE ,
+mr.ADDRESS_ROAD ,
+mc.MEMBCAT_DESC ,
+mp.PROVINCE_DESC  ,
+md.DISTRICT_DESC ,
+mt.TAMBOL_DESC ,
+mr.POSTCODE ,
+mr.MEM_TEL  ,
+mr.MEM_TELMOBILE ,
+mr.EMAIL ,
+mr.LINE_ID
+FROM MBREQAPPL mr
+LEFT OUTER JOIN MBUCFCATEGORY mc ON mr.MEMBCAT_CODE = mc.MEMBCAT_CODE
+LEFT OUTER JOIN MBUCFPROVINCE mp ON mr.PROVINCE_CODE  = mp.PROVINCE_CODE
+LEFT OUTER JOIN MBUCFDISTRICT md ON mr.DISTRICT_CODE = md.DISTRICT_CODE
+LEFT OUTER JOIN MBUCFTAMBOL   mt ON mr.TAMBOL_CODE = mt.TAMBOL_CODE
+WHERE mr.APPL_DOCNO = $P{as_appl_docno}
+AND mr.COOP_ID = $P{as_coop_id}
+FETCH FIRST 1 ROWS ONLY]]>
+	</queryString>
+	<field name="COOP_ID" class="java.lang.String"/>
+	<field name="APPL_DOCNO" class="java.lang.String"/>
+	<field name="MEMB_NAME" class="java.lang.String"/>
+	<field name="MEMB_SURNAME" class="java.lang.String"/>
+	<field name="CARD_PERSON" class="java.lang.String"/>
+	<field name="ADDRESS_NO" class="java.lang.String"/>
+	<field name="ADDRESS_MOO" class="java.lang.String"/>
+	<field name="ADDRESS_SOI" class="java.lang.String"/>
+	<field name="ADDRESS_VILLAGE" class="java.lang.String"/>
+	<field name="ADDRESS_ROAD" class="java.lang.String"/>
+	<field name="MEMBCAT_DESC" class="java.lang.String"/>
+	<field name="PROVINCE_DESC" class="java.lang.String"/>
+	<field name="DISTRICT_DESC" class="java.lang.String"/>
+	<field name="TAMBOL_DESC" class="java.lang.String"/>
+	<field name="POSTCODE" class="java.lang.String"/>
+	<field name="MEM_TEL" class="java.lang.String"/>
+	<field name="MEM_TELMOBILE" class="java.lang.String"/>
+	<field name="EMAIL" class="java.lang.String"/>
+	<field name="LINE_ID" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="28" splitType="Stretch">
+			<textField>
+				<reportElement uuid="f4b434c9-6983-4617-89cd-cad39a8dc027" x="0" y="0" width="555" height="28"/>
+				<box>
+					<bottomPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA["ใบสมัครสมาชิก"+$F{MEMBCAT_DESC}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<detail>
+		<band height="111" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="840d8323-83a3-4ce1-a77e-a958ecc1a763" x="66" y="28" width="30" height="17"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<text><![CDATA[ข้าพเจ้า]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="fccd5c5a-d88c-4f25-999d-0eb7d92b4868" x="96" y="28" width="72" height="17"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{MEMB_NAME}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="d3b4914a-29d1-4204-9823-a9856c62a57d" x="15" y="0" width="525" height="28"/>
+				<box topPadding="5"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[เรียนคณะกรรมการดำเนินการสหกรณ์ออมทรัพย์องค์กรปกครองส่วนท้องถิ่น จำกัด]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="80811a56-7f3c-4a40-87d3-e352f168e432" x="168" y="28" width="30" height="17"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<text><![CDATA[นามสกุล]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="60107590-dc6b-490e-8ff6-79a4fc19efce" x="198" y="28" width="72" height="17"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{MEMB_SURNAME}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="50e55961-6f7f-4599-a98d-115989e75fa4" x="270" y="28" width="106" height="17"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<text><![CDATA[เลขประจำตัวประชาชน]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="bde36b81-3e3d-46fc-8e02-08571698828b" x="376" y="28" width="91" height="17"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CARD_PERSON}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="00b20899-4d76-43c8-b422-1bd830d3ff5b" x="15" y="45" width="25" height="17"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<text><![CDATA[บ้านเลขที่]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="e9e8929d-f50a-49c8-b13a-771dfc42a5f8" x="40" y="45" width="30" height="17"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ADDRESS_NO} == null ? "-" : $F{ADDRESS_NO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="21e1a0ba-3980-48ab-a5bb-87a6e6a7ed39" x="70" y="45" width="20" height="17"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<text><![CDATA[หมู่]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="ba387a69-033c-4975-ad1b-fc432225403d" x="90" y="45" width="27" height="17"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ADDRESS_MOO} == null ? "-" : $F{ADDRESS_MOO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="3c419827-9da1-4b43-9a20-177ecc8e6277" x="117" y="45" width="27" height="17"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<text><![CDATA[ถนน]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="cbe4f242-d1e1-4182-b512-864a47774e20" x="144" y="45" width="35" height="17"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ADDRESS_ROAD} == null ? "-" : $F{ADDRESS_ROAD}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="f530d270-e2e1-4b43-99b0-d8f2dcd4f7a6" x="179" y="45" width="34" height="17"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<text><![CDATA[แขวน/ตำบล]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="18199b35-4624-46b6-b6a4-7ff51d40569d" x="213" y="45" width="40" height="17"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TAMBOL_DESC}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="f4fc5254-a7b2-4b85-9688-7139e26f2a76" x="253" y="45" width="49" height="17"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<text><![CDATA[เขต/อำเภอ]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="6bfae306-dd3b-4f30-8685-207b8953e451" x="302" y="45" width="74" height="17"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DISTRICT_DESC}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="8a42e1de-0aff-4998-b5b5-c0d1f3e74647" x="376" y="45" width="40" height="17"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<text><![CDATA[จังหวัด]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="c1804ae2-d42a-4264-9259-40ecc8c48c8f" x="416" y="45" width="54" height="17"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PROVINCE_DESC}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="90c6ea5a-a1ae-4d45-8dbb-ea03fd0071aa" x="470" y="45" width="35" height="17"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<text><![CDATA[รหัสไปรษณีย์]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="d54006c0-d738-43de-bb4b-4cef4c4133ab" x="505" y="45" width="35" height="17"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{POSTCODE}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="d8724751-7c7e-4e36-b897-cafae33e8300" x="15" y="62" width="35" height="17"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<text><![CDATA[โทรศัพท์]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="756da3ba-2f0d-4416-9fe7-add25e24f70c" x="50" y="62" width="72" height="17"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{MEM_TEL} == null ? "-" : $F{MEM_TEL}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="d56941a6-f33a-4cd1-8d4a-0c12d5b86409" x="122" y="62" width="35" height="17"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<text><![CDATA[โทรศัพท์มือถือ]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="9a4dc4e9-306e-4c15-957d-b8a2c07a9245" x="157" y="62" width="72" height="17"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{MEM_TELMOBILE} == null ? "-" : $F{MEM_TELMOBILE}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="71ff9839-4c02-4345-8a82-f2a61bbd6313" x="229" y="62" width="35" height="17"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<text><![CDATA[E-mail (ส่วนตัว)]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="37aaeace-ccb7-4e0c-9c40-3cd9c98f5789" x="264" y="62" width="88" height="17"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{EMAIL} == null ? "-" : $F{EMAIL}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="d523645a-3f06-4d3b-81a0-a4eb6894e152" x="352" y="62" width="32" height="17"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<text><![CDATA[ID Line (ส่วนตัว)]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="5d3be9d2-e7e1-417c-9530-97add52e28a2" x="384" y="62" width="33" height="17"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{LINE_ID} == null ? "-" : $F{LINE_ID}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

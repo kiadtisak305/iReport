@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ir_mbshr_resign_loan_sub" language="groovy" pageWidth="139" pageHeight="842" columnWidth="139" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="2cb5bd78-c5f9-4e77-b960-f4d4b3cf0a3f">
+	<property name="ireport.zoom" value="3.4522712143931056"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="as_docno" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select  * from mbreqresignloan
+where resignreq_docno = $P{as_docno}]]>
+	</queryString>
+	<field name="COOP_ID" class="java.lang.String"/>
+	<field name="RESIGNREQ_DOCNO" class="java.lang.String"/>
+	<field name="SEQ_NO" class="java.math.BigDecimal"/>
+	<field name="LOANCONTRACT_NO" class="java.lang.String"/>
+	<field name="LOANTYPE_CODE" class="java.lang.String"/>
+	<field name="PRINCIPAL_BALANCE" class="java.math.BigDecimal"/>
+	<field name="INTEREST" class="java.math.BigDecimal"/>
+	<field name="INTEREST_ARREAR" class="java.math.BigDecimal"/>
+	<field name="INTEREST_AMOUNT" class="java.math.BigDecimal"/>
+	<field name="CALINT_FROM" class="java.sql.Timestamp"/>
+	<field name="CALINT_TO" class="java.sql.Timestamp"/>
+	<field name="LOANCONT_STATUS" class="java.math.BigDecimal"/>
+	<field name="RETURN_INTEREST" class="java.math.BigDecimal"/>
+	<field name="RKEEP_INTEREST" class="java.math.BigDecimal"/>
+	<field name="RKEEP_PRINCIPAL" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement uuid="48dada15-a8cd-4912-adf3-7336bfa5a00b" x="76" y="0" width="63" height="20"/>
+				<box rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PRINCIPAL_BALANCE}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="7d2ec954-5d73-4d4d-bac7-ea3f9023f09f" x="0" y="0" width="76" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{LOANCONTRACT_NO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>
