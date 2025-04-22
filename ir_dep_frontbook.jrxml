@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ir_dep_frontbook" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a5f8ba49-d155-4fda-9824-a65d335de894">
+	<property name="ireport.zoom" value="1.6105100000000014"/>
+	<property name="ireport.x" value="26"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="as_coopid" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="as_deptno" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select * from dpdeptmaster where coop_id = $P{as_coopid} and deptaccount_no = $P{as_deptno}]]>
+	</queryString>
+	<field name="COOP_ID" class="java.lang.String"/>
+	<field name="DEPTACCOUNT_NO" class="java.lang.String"/>
+	<field name="MEMBCAT_CODE" class="java.lang.String"/>
+	<field name="DEPTTYPE_CODE" class="java.lang.String"/>
+	<field name="MEMBER_NO" class="java.lang.String"/>
+	<field name="DEPTOPEN_DATE" class="java.sql.Timestamp"/>
+	<field name="DEPTCLOSE_STATUS" class="java.math.BigDecimal"/>
+	<field name="DEPTCLOSE_DATE" class="java.sql.Timestamp"/>
+	<field name="DEPTACCOUNT_NAME" class="java.lang.String"/>
+	<field name="DEPTACCOUNT_ENAME" class="java.lang.String"/>
+	<field name="DEPT_OBJECTIVE" class="java.lang.String"/>
+	<field name="CHECK_DIGIT" class="java.lang.String"/>
+	<field name="DEPTPASSBOOK_NO" class="java.lang.String"/>
+	<field name="CONDFORWITHDRAW" class="java.lang.String"/>
+	<field name="TAXSPCRATE_STATUS" class="java.math.BigDecimal"/>
+	<field name="F_TAX_RATE" class="java.math.BigDecimal"/>
+	<field name="TAXPERSONAL_ID" class="java.lang.String"/>
+	<field name="INTPAY_STATUS" class="java.math.BigDecimal"/>
+	<field name="TRAN_ACC_NO" class="java.lang.String"/>
+	<field name="SPCINT_RATE_STATUS" class="java.math.BigDecimal"/>
+	<field name="SPCINT_RATE" class="java.math.BigDecimal"/>
+	<field name="PRNCBAL" class="java.math.BigDecimal"/>
+	<field name="WITHDRAWABLE_AMT" class="java.math.BigDecimal"/>
+	<field name="CLEARINGCHQ_AMT" class="java.math.BigDecimal"/>
+	<field name="SEQUEST_STATUS" class="java.math.BigDecimal"/>
+	<field name="SEQUEST_DATE" class="java.sql.Timestamp"/>
+	<field name="SEQUEST_AMOUNT" class="java.math.BigDecimal"/>
+	<field name="LASTSTMSEQ_NO" class="java.math.BigDecimal"/>
+	<field name="LASTPAGE_BOOK" class="java.math.BigDecimal"/>
+	<field name="DEPTMONTH_STATUS" class="java.math.BigDecimal"/>
+	<field name="LASTLINE_BOOK" class="java.math.BigDecimal"/>
+	<field name="PRNC_NO" class="java.math.BigDecimal"/>
+	<field name="LASTACCESS_DATE" class="java.sql.Timestamp"/>
+	<field name="LASTMOVEMENT_DATE" class="java.sql.Timestamp"/>
+	<field name="LASTCALINT_DATE" class="java.sql.Timestamp"/>
+	<field name="SEQUEST_RESON" class="java.lang.String"/>
+	<field name="DEPTINT_REMAIN" class="java.math.BigDecimal"/>
+	<field name="BANK_CODE" class="java.lang.String"/>
+	<field name="BANK_BRANCH" class="java.lang.String"/>
+	<field name="BANK_ACCID" class="java.lang.String"/>
+	<field name="DEPT_TRANACC_NAME" class="java.lang.String"/>
+	<field name="REMARK" class="java.lang.String"/>
+	<field name="DEP_CNT" class="java.math.BigDecimal"/>
+	<field name="WITD_CNT" class="java.math.BigDecimal"/>
+	<field name="DEP_PERIOD" class="java.math.BigDecimal"/>
+	<field name="WITD_PERIOD" class="java.math.BigDecimal"/>
+	<field name="DEPTREQUEST_DOCNO" class="java.lang.String"/>
+	<field name="LASTPRINT_NO" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="170">
+			<textField pattern="">
+				<reportElement uuid="8f06067b-582b-445c-89e1-c0f4aa18de6a" x="430" y="48" width="170" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="16"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DEPTACCOUNT_NO}]]></textFieldExpression>
+			</textField>
+			<textField pattern="">
+				<reportElement uuid="01a951b4-f925-4db6-82b7-976ae3a63f19" x="600" y="0" width="170" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="16"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DEPTPASSBOOK_NO}]]></textFieldExpression>
+			</textField>
+			<textField pattern="">
+				<reportElement uuid="6e94392b-b8d5-4dc2-95de-3be0ae5ea573" x="314" y="101" width="200" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="16"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DEPTACCOUNT_NAME}]]></textFieldExpression>
+			</textField>
+			<textField pattern="">
+				<reportElement uuid="669e5569-3453-4da0-a939-1f679d11341b" x="144" y="48" width="170" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="16"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{MEMBER_NO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

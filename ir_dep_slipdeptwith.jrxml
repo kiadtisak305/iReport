@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ir_dep_slipdeptwith" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a5f8ba49-d155-4fda-9824-a65d335de894">
+	<property name="ireport.zoom" value="1.2100000000000009"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="as_coopid" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="as_slipno" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select * from dpdeptslip where deptslip_no = $P{as_slipno} and coop_id = $P{as_coopid}]]>
+	</queryString>
+	<field name="COOP_ID" class="java.lang.String"/>
+	<field name="DEPTSLIP_NO" class="java.lang.String"/>
+	<field name="DEPTACCOUNT_NO" class="java.lang.String"/>
+	<field name="DEPTTYPE_CODE" class="java.lang.String"/>
+	<field name="DEPTGROUP_CODE" class="java.lang.String"/>
+	<field name="MEMBCAT_CODE" class="java.lang.String"/>
+	<field name="ENTRY_DATE" class="java.sql.Timestamp"/>
+	<field name="OPERATE_DATE" class="java.sql.Timestamp"/>
+	<field name="DEPTITEM_GROUP" class="java.lang.String"/>
+	<field name="ITEM_AMT" class="java.math.BigDecimal"/>
+	<field name="PRNCBAL" class="java.math.BigDecimal"/>
+	<field name="WITHDRAWABLE_AMT" class="java.math.BigDecimal"/>
+	<field name="ENTRY_ID" class="java.lang.String"/>
+	<field name="FEEWITD_STATUS" class="java.math.BigDecimal"/>
+	<field name="FEEWITD_AMT" class="java.math.BigDecimal"/>
+	<field name="FEECBT_STATUS" class="java.math.BigDecimal"/>
+	<field name="FEECBT_AMT" class="java.math.BigDecimal"/>
+	<field name="FEECHQ_STATUS" class="java.math.BigDecimal"/>
+	<field name="FEECHQ_AMT" class="java.math.BigDecimal"/>
+	<field name="INT_AMT" class="java.math.BigDecimal"/>
+	<field name="TAX_AMT" class="java.math.BigDecimal"/>
+	<field name="INT_RETURN" class="java.math.BigDecimal"/>
+	<field name="TAX_RETURN" class="java.math.BigDecimal"/>
+	<field name="ITEMNET_AMT" class="java.math.BigDecimal"/>
+	<field name="DUE_FLAG" class="java.math.BigDecimal"/>
+	<field name="ITEM_STATUS" class="java.math.BigDecimal"/>
+	<field name="PRNC_NO" class="java.math.BigDecimal"/>
+	<field name="MACHINE_ID" class="java.lang.String"/>
+	<field name="NOBOOK_FLAG" class="java.math.BigDecimal"/>
+	<field name="REMARK" class="java.lang.String"/>
+	<field name="CANCEL_ID" class="java.lang.String"/>
+	<field name="CANCEL_DATE" class="java.sql.Timestamp"/>
+	<field name="CANCEL_TIME" class="java.sql.Timestamp"/>
+	<field name="CANCEL_CODE" class="java.lang.String"/>
+	<field name="AUTHORIZE_ID" class="java.lang.String"/>
+	<field name="POST_TOFIN" class="java.math.BigDecimal"/>
+	<field name="SAVE_TIME" class="java.sql.Timestamp"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="94">
+			<textField pattern="#,##0.00">
+				<reportElement uuid="406f3615-0f38-4595-8ef9-261301980bfc" x="519" y="69" width="200" height="25"/>
+				<box>
+					<bottomPen lineWidth="1.5" lineStyle="Dotted"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="18"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ITEMNET_AMT}]]></textFieldExpression>
+			</textField>
+			<textField pattern="">
+				<reportElement uuid="671d1281-1d3d-4dcf-9cef-038fab629efb" x="0" y="0" width="180" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="16"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DEPTSLIP_NO}]]></textFieldExpression>
+			</textField>
+			<textField pattern="">
+				<reportElement uuid="88be1a1e-0ae8-446f-95dd-24fb7e1f83fa" x="180" y="0" width="100" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="16"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DEPTITEM_GROUP}]]></textFieldExpression>
+			</textField>
+			<textField pattern="">
+				<reportElement uuid="5d3a0f10-8403-4caf-bfcb-889af28bead5" x="552" y="0" width="150" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="16"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ENTRY_ID}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="0a5db0dc-c6ce-4058-abae-4aa1ee72aedc" x="319" y="69" width="200" height="25"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="18"/>
+				</textElement>
+				<text><![CDATA[ยอดสุทธิ]]></text>
+			</staticText>
+			<textField pattern="">
+				<reportElement uuid="8f06067b-582b-445c-89e1-c0f4aa18de6a" x="280" y="0" width="172" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="16"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DEPTACCOUNT_NO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="0b6d958a-1c7d-4124-b59e-0d4d91cd9b28" x="719" y="69" width="83" height="25"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="18"/>
+					<paragraph leftIndent="15"/>
+				</textElement>
+				<text><![CDATA[บาท]]></text>
+			</staticText>
+		</band>
+	</detail>
+</jasperReport>

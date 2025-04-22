@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ir_dep_passbook" language="groovy" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="cc351ff7-499f-438b-a70f-ed250aeaa4bd">
+	<property name="ireport.zoom" value="2.143588810000002"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="print_date" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="as_deptno" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="mid_spacing" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="st_seqno" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="et_seqno" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="sbt_seqno" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ebt_seqno" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="sum_status" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="srow_print" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="bf_status" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select * from
+(
+--ยอดยกมา
+select 1 as dis,0 as seq_no ,$P{print_date} as operate_date,0 as dep_amt,0 as withdraw_amt ,prncbal,'' as entry_id
+from dpdeptstatement
+where deptaccount_no = $P{as_deptno} and seq_no = (select max(seq_no) from dpdeptstatement ss where ss.deptaccount_no = dpdeptstatement.deptaccount_no and seq_no < 2)
+and ROWNUM = $P{bf_status}
+
+union all  --แถวว่าง
+select 2 as dis ,0 as seq_no ,null as operate_date,0 as dep_amt,0 as withdraw_amt ,0 as prncbal ,'' as entry_id
+from dpdeptstatement where ROWNUM <= $P{srow_print} -1
+
+union all  --sum
+SELECT
+    3 AS dis,
+    0 AS seq_no,
+    $P{print_date} AS operate_date,
+    SUM(CASE WHEN recppaytype_flag = 1 THEN item_amt ELSE 0 END) AS dep_amt,
+    SUM(CASE WHEN recppaytype_flag <> 1 THEN item_amt ELSE 0 END) AS withdraw_amt,
+    max(sprncbal.prncbal) AS prncbal,
+    '' AS entry_id
+FROM dpdeptstatement
+JOIN dpucfrecppaytype
+    ON dpdeptstatement.recppaytype_code = dpucfrecppaytype.recppaytype_code
+JOIN (
+    SELECT deptaccount_no, prncbal
+    FROM dpdeptstatement where deptaccount_no = $P{as_deptno} AND seq_no = (SELECT MAX(seq_no) FROM dpdeptstatement WHERE deptaccount_no = $P{as_deptno} AND seq_no < 2)
+) sprncbal
+    ON sprncbal.deptaccount_no = dpdeptstatement.deptaccount_no
+WHERE dpdeptstatement.deptaccount_no = $P{as_deptno}
+AND dpdeptstatement.seq_no < $P{st_seqno}
+AND dpdeptstatement.printbook_status = 0
+HAVING $P{sum_status} > 0
+
+UNION ALL --รายการที่พิมพ์ ส่วนบนสมุด
+SELECT 4 AS dis, seq_no , operate_date,
+       CASE WHEN recppaytype_flag = 1 THEN item_amt ELSE NULL END AS dep_amt,
+       CASE WHEN recppaytype_flag <> 1 THEN item_amt ELSE NULL END AS withdraw_amt,
+       prncbal,entry_id
+FROM dpdeptstatement
+JOIN dpucfrecppaytype ON dpdeptstatement.recppaytype_code = dpucfrecppaytype.recppaytype_code
+WHERE deptaccount_no = $P{as_deptno}
+AND seq_no BETWEEN $P{st_seqno} AND $P{et_seqno}
+
+UNION ALL --ช่องว่างกลางสมุด
+select 5 as dis,0 as seq_no ,null as operate_date,0 as dep_amt,0 as withdraw_amt ,0 as prncbal,'' as entry_id from dpdeptstatement where ROWNUM <= $P{mid_spacing}
+
+UNION ALL --รายการที่พิมพ์ ส่วนล่างสมุด
+SELECT 6 AS dis,seq_no , operate_date,
+       CASE WHEN recppaytype_flag = 1 THEN item_amt ELSE NULL END AS dep_amt,
+       CASE WHEN recppaytype_flag <> 1 THEN item_amt ELSE NULL END AS withdraw_amt,
+       prncbal,entry_id
+FROM dpdeptstatement
+JOIN dpucfrecppaytype ON dpdeptstatement.recppaytype_code = dpucfrecppaytype.recppaytype_code
+WHERE deptaccount_no = $P{as_deptno}
+AND seq_no BETWEEN $P{sbt_seqno} AND $P{ebt_seqno}
+)printbook order by dis,seq_no]]>
+	</queryString>
+	<field name="DIS" class="java.math.BigDecimal"/>
+	<field name="SEQ_NO" class="java.math.BigDecimal"/>
+	<field name="OPERATE_DATE" class="java.sql.Timestamp"/>
+	<field name="DEP_AMT" class="java.math.BigDecimal"/>
+	<field name="WITHDRAW_AMT" class="java.math.BigDecimal"/>
+	<field name="PRNCBAL" class="java.math.BigDecimal"/>
+	<field name="ENTRY_ID" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="37">
+			<staticText>
+				<reportElement uuid="9e98f0aa-6ad4-4cb3-9f6a-f8f47fb4ffd3" isPrintRepeatedValues="false" x="138" y="0" width="100" height="20"/>
+				<textElement/>
+				<text><![CDATA[เว้นความสูงถึงบรรทัดที่1]]></text>
+			</staticText>
+		</band>
+	</title>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement uuid="6c0251a0-9508-48a7-a985-d4a761b56c55" x="30" y="0" width="59" height="20">
+					<printWhenExpression><![CDATA[$F{DIS} == 1 || $F{DIS} == 3 || $F{DIS} == 4 || $F{DIS} == 6]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy",new Locale("th","TH")).format($F{OPERATE_DATE})]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="aa431b11-3fbb-4d86-8c24-c501d4792ff8" x="178" y="0" width="60" height="20">
+					<printWhenExpression><![CDATA[$F{DIS} == 1 || $F{DIS} == 3 || $F{DIS} == 4 || $F{DIS} == 6]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{WITHDRAW_AMT}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="6079058a-765b-4609-bbcf-b1260e760711" x="101" y="0" width="60" height="20">
+					<printWhenExpression><![CDATA[$F{DIS} == 1 || $F{DIS} == 3 || $F{DIS} == 4 || $F{DIS} == 6]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DEP_AMT}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="36596378-b62d-45d5-a072-86234b386d21" x="0" y="0" width="30" height="20"/>
+				<textElement>
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="350077a3-28d9-4af8-8539-140b8b12d0a4" x="270" y="0" width="70" height="20">
+					<printWhenExpression><![CDATA[$F{DIS} == 1 || $F{DIS} == 3 || $F{DIS} == 4 || $F{DIS} == 6]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PRNCBAL}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="cad59fc6-cb00-409a-a3bc-c49898646c84" x="350" y="0" width="52" height="20">
+					<printWhenExpression><![CDATA[$F{DIS} == 1 || $F{DIS} == 3 || $F{DIS} == 4 || $F{DIS} == 6]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ENTRY_ID}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ir_dep_slipbeforesave_open" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a5f8ba49-d155-4fda-9824-a65d335de894">
+	<property name="ireport.zoom" value="1.6105100000000014"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="as_coopid" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="as_entryid" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="as_itemnetamt" class="java.math.BigDecimal">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="as_membno" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="as_date" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select * from mbmembmaster mb
+left join mbucfprename pn on mb.prename_code = pn.prename_code
+where coop_id = $P{as_coopid} and member_no = $P{as_membno}]]>
+	</queryString>
+	<field name="COOP_ID" class="java.lang.String"/>
+	<field name="MEMBER_NO" class="java.lang.String"/>
+	<field name="PRENAME_CODE" class="java.lang.String"/>
+	<field name="MEMB_NAME" class="java.lang.String"/>
+	<field name="MEMB_SURNAME" class="java.lang.String"/>
+	<field name="MEMB_ENAME" class="java.lang.String"/>
+	<field name="MEMB_ESURNAME" class="java.lang.String"/>
+	<field name="MEMBCAT_CODE" class="java.lang.String"/>
+	<field name="MEMBTYPE_CODE" class="java.lang.String"/>
+	<field name="MEMBGROUP_CODE" class="java.lang.String"/>
+	<field name="BIRTH_DATE" class="java.sql.Timestamp"/>
+	<field name="MEMBER_DATE" class="java.sql.Timestamp"/>
+	<field name="DEAD_STATUS" class="java.math.BigDecimal"/>
+	<field name="DEAD_DATE" class="java.sql.Timestamp"/>
+	<field name="RETIRE_STATUS" class="java.math.BigDecimal"/>
+	<field name="RETIRE_DATE" class="java.sql.Timestamp"/>
+	<field name="EARLY_DATE" class="java.sql.Timestamp"/>
+	<field name="RESIGN_STATUS" class="java.math.BigDecimal"/>
+	<field name="RESIGN_DATE" class="java.sql.Timestamp"/>
+	<field name="RESIGNCAUSE_CODE" class="java.lang.String"/>
+	<field name="CLOSE_DATE" class="java.sql.Timestamp"/>
+	<field name="SEX" class="java.lang.String"/>
+	<field name="MARIAGE_STATUS" class="java.math.BigDecimal"/>
+	<field name="ADDRESS_NO" class="java.lang.String"/>
+	<field name="ADDRESS_MOO" class="java.lang.String"/>
+	<field name="ADDRESS_SOI" class="java.lang.String"/>
+	<field name="ADDRESS_VILLAGE" class="java.lang.String"/>
+	<field name="ADDRESS_ROAD" class="java.lang.String"/>
+	<field name="TAMBOL_CODE" class="java.lang.String"/>
+	<field name="DISTRICT_CODE" class="java.lang.String"/>
+	<field name="PROVINCE_CODE" class="java.lang.String"/>
+	<field name="POSTCODE" class="java.lang.String"/>
+	<field name="MEM_TEL" class="java.lang.String"/>
+	<field name="MEM_TELMOBILE" class="java.lang.String"/>
+	<field name="MEM_TELWORK" class="java.lang.String"/>
+	<field name="EMAIL" class="java.lang.String"/>
+	<field name="CARD_PERSON" class="java.lang.String"/>
+	<field name="WORK_DATE" class="java.sql.Timestamp"/>
+	<field name="POSITION_CODE" class="java.lang.String"/>
+	<field name="LEVEL_CODE" class="java.math.BigDecimal"/>
+	<field name="DEPARTMENT_CODE" class="java.lang.String"/>
+	<field name="SALARY_AMOUNT" class="java.math.BigDecimal"/>
+	<field name="SALARY_ID" class="java.lang.String"/>
+	<field name="FIRSTFEE_STATUS" class="java.math.BigDecimal"/>
+	<field name="MEMBER_STATUS" class="java.math.BigDecimal"/>
+	<field name="MEMBER_REF" class="java.lang.String"/>
+	<field name="PAUSEKEEP_FLAG" class="java.math.BigDecimal"/>
+	<field name="PAUSEKEEP_DATE" class="java.sql.Timestamp"/>
+	<field name="FIRSTKEEP_DATE" class="java.sql.Timestamp"/>
+	<field name="LASTKEEP_DATE" class="java.sql.Timestamp"/>
+	<field name="DROPGURANTEE_FLAG" class="java.math.BigDecimal"/>
+	<field name="DROPLOANALL_FLAG" class="java.math.BigDecimal"/>
+	<field name="LEGAL_FLAG" class="java.math.BigDecimal"/>
+	<field name="REMARK" class="java.lang.String"/>
+	<field name="ACCUM_INTEREST" class="java.math.BigDecimal"/>
+	<field name="SUMINT_LASTYEAR" class="java.math.BigDecimal"/>
+	<field name="EXPENSE_CODE" class="java.lang.String"/>
+	<field name="EXPENSE_BANK" class="java.lang.String"/>
+	<field name="EXPENSE_BRANCH" class="java.lang.String"/>
+	<field name="EXPENSE_ACCID" class="java.lang.String"/>
+	<field name="APPL_DOCNO" class="java.lang.String"/>
+	<field name="APPLTYPE_CODE" class="java.lang.String"/>
+	<field name="NATIONALITY" class="java.lang.String"/>
+	<field name="UPDATE_BYENTRYID" class="java.lang.String"/>
+	<field name="UPDATE_BYENTRYIP" class="java.lang.String"/>
+	<field name="UPDATE_BYLASTDOC" class="java.lang.String"/>
+	<field name="MEMBGRPELEC_CODE" class="java.lang.String"/>
+	<field name="MEMBGRPELEC_LOCK" class="java.math.BigDecimal"/>
+	<field name="TRANMEM_COOP" class="java.lang.String"/>
+	<field name="TRANMEM_DATE" class="java.sql.Timestamp"/>
+	<field name="TRANSHARE_VALUE" class="java.math.BigDecimal"/>
+	<field name="TRANSHARE_PERIOD" class="java.math.BigDecimal"/>
+	<field name="NCBSEND_FLAG" class="java.math.BigDecimal"/>
+	<field name="RECEIPTMONTH_FLAG" class="java.math.BigDecimal"/>
+	<field name="MEM_TAXID" class="java.lang.String"/>
+	<field name="MEM_FAX" class="java.lang.String"/>
+	<field name="TRANLOAN_VALUE" class="java.math.BigDecimal"/>
+	<field name="PAUSEDIV_FLAG" class="java.math.BigDecimal"/>
+	<field name="PAUSEAVG_FLAG" class="java.math.BigDecimal"/>
+	<field name="EARLY_CAUSE" class="java.lang.String"/>
+	<field name="MOBILEAPPLY_STATUS" class="java.math.BigDecimal"/>
+	<field name="BLOOD_TYPE" class="java.lang.String"/>
+	<field name="MOBILEAPPLY_DATE" class="java.sql.Timestamp"/>
+	<field name="LEGAL_REMARK" class="java.lang.String"/>
+	<field name="RECEIPTMONTH_DATE" class="java.sql.Timestamp"/>
+	<field name="ADDRESS_SET_CODE" class="java.lang.String"/>
+	<field name="ADDRESS_RECEIPT_CODE" class="java.lang.String"/>
+	<field name="RELIGION" class="java.lang.String"/>
+	<field name="RACE" class="java.lang.String"/>
+	<field name="TRANMEM_FLAG" class="java.math.BigDecimal"/>
+	<field name="MEMB_MIDNAME" class="java.lang.String"/>
+	<field name="MEMB_EMIDNAME" class="java.lang.String"/>
+	<field name="MEMB_COOPID" class="java.lang.String"/>
+	<field name="POSITION_DESC" class="java.lang.String"/>
+	<field name="EXPIRATION_DATE" class="java.sql.Timestamp"/>
+	<field name="RISK_LEVEL" class="java.math.BigDecimal"/>
+	<field name="PDPA_FLAG" class="java.math.BigDecimal"/>
+	<field name="MEMBER_REF_RELATION" class="java.lang.String"/>
+	<field name="LASTACCESS_DATE" class="java.sql.Timestamp"/>
+	<field name="LINE_ID" class="java.lang.String"/>
+	<field name="CARDEXPIRE_DATE" class="java.sql.Timestamp"/>
+	<field name="PRENAME_DESC" class="java.lang.String"/>
+	<field name="PRENAME_ENG" class="java.lang.String"/>
+	<field name="PRENAME_SHORT" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="94">
+			<textField pattern="#,##0.00">
+				<reportElement uuid="406f3615-0f38-4595-8ef9-261301980bfc" x="519" y="69" width="200" height="25"/>
+				<box>
+					<bottomPen lineWidth="1.5" lineStyle="Dotted"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="18"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{as_itemnetamt}]]></textFieldExpression>
+			</textField>
+			<textField pattern="">
+				<reportElement uuid="5d3a0f10-8403-4caf-bfcb-889af28bead5" x="569" y="0" width="150" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="16"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{as_entryid}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="0a5db0dc-c6ce-4058-abae-4aa1ee72aedc" x="319" y="69" width="200" height="25"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="18"/>
+				</textElement>
+				<text><![CDATA[ยอดสุทธิ]]></text>
+			</staticText>
+			<textField pattern="">
+				<reportElement uuid="8f06067b-582b-445c-89e1-c0f4aa18de6a" x="70" y="0" width="150" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="16"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy",new Locale("th","TH")).format($P{as_date})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="0b6d958a-1c7d-4124-b59e-0d4d91cd9b28" x="719" y="69" width="83" height="25"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="18"/>
+					<paragraph leftIndent="15"/>
+				</textElement>
+				<text><![CDATA[บาท]]></text>
+			</staticText>
+			<textField pattern="">
+				<reportElement uuid="469cd28b-dda3-4b3e-a8ee-e72ae7c12337" x="220" y="33" width="299" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="16"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PRENAME_DESC} + " " + $F{MEMB_NAME} + " " + $F{MEMB_SURNAME}]]></textFieldExpression>
+			</textField>
+			<textField pattern="">
+				<reportElement uuid="cae15a76-92ae-4b21-ae17-7a94d02431e9" x="220" y="0" width="99" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="16"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{MEMBER_NO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>
