@@ -3,110 +3,129 @@
 	<property name="ireport.zoom" value="1.4641000000000013"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<parameter name="adtm_entry_date" class="java.util.Date">
+	<parameter name="as_coopid" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
-	<parameter name="as_start_code" class="java.lang.String">
+	<parameter name="work_date" class="java.util.Date">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
-	<parameter name="as_end_code" class="java.lang.String">
+	<parameter name="as_start_type" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
-	<parameter name="scoop_id" class="java.lang.String">
+	<parameter name="as_end_type" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="as_smemcat" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="as_ememcat" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT
+	 cmcoopconstant.coop_name,
     dti.deptaccount_no,
     dm.deptaccount_name,
     dti.entry_date,
     dt.depttype_desc,
     dt.depttype_code,
-    cm.coop_name,
     SUM(dti.prncbal) AS prncbal,   -- รวมยอดคงเหลือ
     SUM(dti.deptitem_amt) AS deptitem_amt,  -- รวมยอดฝาก/ถอน
     dt.membcat_code,
     SUM(dti.balance_forward) AS balance_forward,  -- รวมยอดยกมา
     mc.membcat_desc
 FROM dpdepttranint dti
-INNER JOIN dpdeptmaster dm
-    ON dti.deptaccount_no = dm.deptaccount_no
-    AND dti.coop_id = dm.coop_id
-INNER JOIN dpdepttype dt
-    ON dm.depttype_code = dt.depttype_code
-    AND dm.membcat_code = dt.membcat_code
-    AND dm.coop_id = dt.coop_id
-INNER JOIN cmcoopmaster cm
-    ON dti.coop_id = cm.coop_id
-INNER JOIN mbucfcategory mc
-    ON dt.membcat_code = mc.membcat_code
-    AND dt.coop_id = mc.coop_id
+INNER JOIN dpdeptmaster dm ON dti.deptaccount_no = dm.deptaccount_no AND dti.coop_id = dm.coop_id
+INNER JOIN dpucfdepttype dt ON dm.depttype_code = dt.depttype_code  AND dm.membcat_code = dt.membcat_code  AND dm.coop_id = dt.coop_id
+join cmcoopconstant on dm.coop_id = cmcoopconstant.coop_control
+INNER JOIN mbucfcategory mc  ON dt.membcat_code = mc.membcat_code AND dt.coop_id = mc.coop_id
 WHERE
-    dti.entry_date = $P{adtm_entry_date}
-    AND dt.depttype_code BETWEEN $P{as_start_code} AND $P{as_end_code}
-    AND dti.coop_id = $P{scoop_id}
+    dti.entry_date = $P{work_date}
+    AND dt.depttype_code BETWEEN $P{as_start_type} AND $P{as_end_type}
+    AND dti.coop_id = $P{as_coopid}
+   AND dm.membcat_code between $P{as_smemcat} and $P{as_ememcat}
 GROUP BY
     dti.deptaccount_no,
     dm.deptaccount_name,
     dti.entry_date,
     dt.depttype_desc,
     dt.depttype_code,
-    cm.coop_name,
+    cmcoopconstant.coop_name,
     dt.membcat_code,
     mc.membcat_desc
 ORDER BY
-    dti.entry_date ASC,
+    dti.entry_date ,dt.depttype_code,
     dti.deptaccount_no ASC]]>
 	</queryString>
-	<field name="deptaccount_no" class="java.lang.String"/>
-	<field name="deptaccount_name" class="java.lang.String"/>
-	<field name="entry_date" class="java.sql.Timestamp"/>
-	<field name="depttype_desc" class="java.lang.String"/>
-	<field name="depttype_code" class="java.lang.String"/>
-	<field name="coop_name" class="java.lang.String"/>
-	<field name="prncbal" class="java.math.BigDecimal"/>
-	<field name="deptitem_amt" class="java.math.BigDecimal"/>
-	<field name="membcat_code" class="java.lang.String"/>
-	<field name="balance_forward" class="java.math.BigDecimal"/>
-	<field name="membcat_desc" class="java.lang.String"/>
+	<field name="COOP_NAME" class="java.lang.String"/>
+	<field name="DEPTACCOUNT_NO" class="java.lang.String"/>
+	<field name="DEPTACCOUNT_NAME" class="java.lang.String"/>
+	<field name="ENTRY_DATE" class="java.sql.Timestamp"/>
+	<field name="DEPTTYPE_DESC" class="java.lang.String"/>
+	<field name="DEPTTYPE_CODE" class="java.lang.String"/>
+	<field name="PRNCBAL" class="java.math.BigDecimal"/>
+	<field name="DEPTITEM_AMT" class="java.math.BigDecimal"/>
+	<field name="MEMBCAT_CODE" class="java.lang.String"/>
+	<field name="BALANCE_FORWARD" class="java.math.BigDecimal"/>
+	<field name="MEMBCAT_DESC" class="java.lang.String"/>
 	<variable name="sum_1_cat_code" class="java.math.BigDecimal" resetType="Group" resetGroup="membcat_code" calculation="Sum">
-		<variableExpression><![CDATA[$F{balance_forward}]]></variableExpression>
+		<variableExpression><![CDATA[$F{BALANCE_FORWARD}]]></variableExpression>
 	</variable>
 	<variable name="sum_2_cat_code" class="java.math.BigDecimal" resetType="Group" resetGroup="membcat_code" calculation="Sum">
-		<variableExpression><![CDATA[$F{deptitem_amt}]]></variableExpression>
+		<variableExpression><![CDATA[$F{DEPTITEM_AMT}]]></variableExpression>
 	</variable>
 	<variable name="sum_3_cat_code" class="java.math.BigDecimal" resetType="Group" resetGroup="membcat_code" calculation="Sum">
-		<variableExpression><![CDATA[$F{prncbal}]]></variableExpression>
+		<variableExpression><![CDATA[$F{PRNCBAL}]]></variableExpression>
 	</variable>
 	<variable name="sum_1_type_code" class="java.math.BigDecimal" resetType="Group" resetGroup="depttype_code" calculation="Sum">
-		<variableExpression><![CDATA[$F{balance_forward}]]></variableExpression>
+		<variableExpression><![CDATA[$F{BALANCE_FORWARD}]]></variableExpression>
 	</variable>
 	<variable name="sum_2_type_code" class="java.math.BigDecimal" resetType="Group" resetGroup="depttype_code" calculation="Sum">
-		<variableExpression><![CDATA[$F{deptitem_amt}]]></variableExpression>
+		<variableExpression><![CDATA[$F{DEPTITEM_AMT}]]></variableExpression>
 	</variable>
 	<variable name="sum_3_type_code" class="java.math.BigDecimal" resetType="Group" resetGroup="depttype_code" calculation="Sum">
-		<variableExpression><![CDATA[$F{prncbal}]]></variableExpression>
+		<variableExpression><![CDATA[$F{PRNCBAL}]]></variableExpression>
 	</variable>
 	<variable name="sum_1_all" class="java.math.BigDecimal" calculation="Sum">
-		<variableExpression><![CDATA[$F{balance_forward}]]></variableExpression>
+		<variableExpression><![CDATA[$F{BALANCE_FORWARD}]]></variableExpression>
 	</variable>
 	<variable name="sum_2_all" class="java.math.BigDecimal" calculation="Sum">
-		<variableExpression><![CDATA[$F{deptitem_amt}]]></variableExpression>
+		<variableExpression><![CDATA[$F{DEPTITEM_AMT}]]></variableExpression>
 	</variable>
 	<variable name="sum_3_all" class="java.math.BigDecimal" calculation="Sum">
-		<variableExpression><![CDATA[$F{prncbal}]]></variableExpression>
+		<variableExpression><![CDATA[$F{PRNCBAL}]]></variableExpression>
 	</variable>
-	<group name="depttype_code">
-		<groupExpression><![CDATA[$F{depttype_code}]]></groupExpression>
+	<group name="reportTitle">
+		<groupExpression><![CDATA[""]]></groupExpression>
+		<groupHeader>
+			<band height="50">
+				<textField>
+					<reportElement uuid="f8d1024e-0de1-4e3c-8be2-80f5bfbd415e" x="0" y="0" width="555" height="20"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Angsana New" size="16" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{COOP_NAME}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement uuid="630df078-c102-4b4d-82f6-a8638aa6d368" x="0" y="20" width="555" height="20"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Angsana New" size="16" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["รายงานการจ่ายดอกเบี้ยรายงวด ประจำวันที่ " +new SimpleDateFormat(" dd/MM/yyyy", new Locale("th", "TH")).format($P{work_date})]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="depttype_code" isReprintHeaderOnEachPage="true">
+		<groupExpression><![CDATA[$F{DEPTTYPE_CODE}]]></groupExpression>
 		<groupHeader>
 			<band height="31">
 				<textField>
 					<reportElement uuid="57c337cc-a08a-4f38-b85f-034b1017c988" x="0" y="5" width="555" height="20"/>
 					<textElement verticalAlignment="Middle">
 						<font fontName="Angsana New" size="16" isBold="true"/>
-						<paragraph leftIndent="15"/>
 					</textElement>
-					<textFieldExpression><![CDATA["ประเภทบัญชี : "+$F{depttype_desc}]]></textFieldExpression>
+					<textFieldExpression><![CDATA["ประเภทบัญชี "+ $F{DEPTTYPE_CODE} + " : "+$F{DEPTTYPE_DESC}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupHeader>
@@ -118,7 +137,7 @@ ORDER BY
 						<font fontName="Angsana New" size="16" isBold="true"/>
 						<paragraph leftIndent="15"/>
 					</textElement>
-					<textFieldExpression><![CDATA["รวมประเภทบัญชี : "+$F{depttype_desc}]]></textFieldExpression>
+					<textFieldExpression><![CDATA["รวมประเภทบัญชี : "+$F{DEPTTYPE_DESC}]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,##0.00">
 					<reportElement uuid="56da975e-5338-4eb5-a23a-41e94c35f3ff" x="386" y="6" width="85" height="20"/>
@@ -150,18 +169,83 @@ ORDER BY
 			</band>
 		</groupFooter>
 	</group>
-	<group name="membcat_code">
-		<groupExpression><![CDATA[$F{membcat_code}]]></groupExpression>
+	<group name="membcat_code" isReprintHeaderOnEachPage="true">
+		<groupExpression><![CDATA[$F{MEMBCAT_CODE}]]></groupExpression>
 		<groupHeader>
-			<band height="30">
+			<band height="62">
 				<textField>
 					<reportElement uuid="606ab4c9-2357-4bd0-b378-ba27acac388d" x="0" y="5" width="555" height="20"/>
 					<textElement verticalAlignment="Middle">
 						<font fontName="Angsana New" size="16" isBold="true"/>
-						<paragraph leftIndent="35"/>
 					</textElement>
-					<textFieldExpression><![CDATA["ประเภทสมาชิก : "+$F{membcat_code}+" - "+$F{membcat_desc}]]></textFieldExpression>
+					<textFieldExpression><![CDATA["ประเภทสมาชิก : "+$F{MEMBCAT_CODE}+" - "+ $F{MEMBCAT_DESC}]]></textFieldExpression>
 				</textField>
+				<staticText>
+					<reportElement uuid="2f449fd8-63af-49b9-9ac0-7827df2bf86b" x="116" y="25" width="185" height="20"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+					</box>
+					<textElement verticalAlignment="Middle" markup="none">
+						<font fontName="Angsana New" size="16" isBold="false"/>
+					</textElement>
+					<text><![CDATA[ชื่อบัญชี]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="aeb52522-f0f1-440a-b96f-88b2e767162e" x="0" y="25" width="31" height="20"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+						<font fontName="Angsana New" size="16" isBold="false"/>
+					</textElement>
+					<text><![CDATA[ลำดับ]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="48cfec1c-aad6-4b63-a6bb-d21becc7faf9" x="31" y="25" width="85" height="20"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+						<font fontName="Angsana New" size="16" isBold="false"/>
+					</textElement>
+					<text><![CDATA[เลขที่บัญชี]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="5908eddb-f07d-40ea-856d-3cfad65764ed" x="301" y="25" width="85" height="20"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
+						<font fontName="Angsana New" size="16" isBold="false"/>
+					</textElement>
+					<text><![CDATA[ยอดคงเหลือเดิม]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="bf06ea14-f428-43dd-aa76-f1e7af2bd03e" x="386" y="25" width="85" height="20"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
+						<font fontName="Angsana New" size="16" isBold="false"/>
+					</textElement>
+					<text><![CDATA[ดอกเบี้ย]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="3526d221-e2d6-4316-bb48-aad4545a918f" x="471" y="25" width="84" height="20"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
+						<font fontName="Angsana New" size="16" isBold="false"/>
+					</textElement>
+					<text><![CDATA[ยอดคงเหลือใหม่]]></text>
+				</staticText>
 			</band>
 		</groupHeader>
 		<groupFooter>
@@ -208,115 +292,31 @@ ORDER BY
 		<band splitType="Stretch"/>
 	</background>
 	<pageHeader>
-		<band height="52" splitType="Stretch">
-			<textField>
-				<reportElement uuid="f8d1024e-0de1-4e3c-8be2-80f5bfbd415e" x="0" y="0" width="555" height="20"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Angsana New" size="16" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{coop_name}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement uuid="630df078-c102-4b4d-82f6-a8638aa6d368" x="0" y="20" width="555" height="20"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Angsana New" size="16" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA["รายงานการจ่ายดอกเบี้ยรายงวด ประจำวันที่ " +new SimpleDateFormat(" dd/MM/yyyy", new Locale("th", "TH")).format($P{adtm_entry_date})]]></textFieldExpression>
-			</textField>
+		<band height="30" splitType="Stretch">
 			<textField evaluationTime="Report">
-				<reportElement uuid="55c56804-614a-4815-ae05-11c8b6b22db0" x="534" y="15" width="21" height="15"/>
-				<textElement verticalAlignment="Middle">
-					<font fontName="Angsana New" isBold="true"/>
+				<reportElement uuid="41ce5614-3778-4058-b62f-2a530569ae00" x="540" y="15" width="15" height="15"/>
+				<textElement>
+					<font fontName="Angsana New" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="7314b9c7-2eb3-4b28-aa5d-20de1c679a78" x="454" y="15" width="80" height="15"/>
+				<reportElement uuid="590ae539-d21c-4a19-822f-a4b898ef9966" x="335" y="0" width="220" height="15"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font fontName="Angsana New" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA["หน้า "+$V{PAGE_NUMBER}+" /"]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement uuid="b3b21d7a-33f1-4958-8bac-a4d78c01bfc8" x="327" y="0" width="228" height="15"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font fontName="Angsana New" isBold="true"/>
+					<font fontName="Angsana New" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA["วันที่พิมพ์ : "+new SimpleDateFormat("dd/MM/yyyy",new Locale("th","TH")).format(new Date())+" "+
 "เวลา " + new SimpleDateFormat("HH:mm:ss").format(new Date())]]></textFieldExpression>
 			</textField>
+			<textField>
+				<reportElement uuid="7f4317c3-22b9-430e-945d-dfba8f8f9aee" x="460" y="15" width="80" height="15"/>
+				<textElement textAlignment="Right">
+					<font fontName="Angsana New" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["หน้า "+$V{PAGE_NUMBER}+" / "]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageHeader>
-	<columnHeader>
-		<band height="20" splitType="Stretch">
-			<staticText>
-				<reportElement uuid="2f449fd8-63af-49b9-9ac0-7827df2bf86b" x="116" y="0" width="185" height="20"/>
-				<box>
-					<topPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5"/>
-				</box>
-				<textElement verticalAlignment="Middle" markup="none">
-					<font fontName="Angsana New" size="16" isBold="false"/>
-				</textElement>
-				<text><![CDATA[ชื่อบัญชี]]></text>
-			</staticText>
-			<staticText>
-				<reportElement uuid="aeb52522-f0f1-440a-b96f-88b2e767162e" x="0" y="0" width="31" height="20"/>
-				<box>
-					<topPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
-					<font fontName="Angsana New" size="16" isBold="false"/>
-				</textElement>
-				<text><![CDATA[ลำดับ]]></text>
-			</staticText>
-			<staticText>
-				<reportElement uuid="48cfec1c-aad6-4b63-a6bb-d21becc7faf9" x="31" y="0" width="85" height="20"/>
-				<box>
-					<topPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
-					<font fontName="Angsana New" size="16" isBold="false"/>
-				</textElement>
-				<text><![CDATA[เลขที่บัญชี]]></text>
-			</staticText>
-			<staticText>
-				<reportElement uuid="5908eddb-f07d-40ea-856d-3cfad65764ed" x="301" y="0" width="85" height="20"/>
-				<box>
-					<topPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5"/>
-				</box>
-				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
-					<font fontName="Angsana New" size="16" isBold="false"/>
-				</textElement>
-				<text><![CDATA[ยอดคงเหลือเดิม]]></text>
-			</staticText>
-			<staticText>
-				<reportElement uuid="bf06ea14-f428-43dd-aa76-f1e7af2bd03e" x="386" y="0" width="85" height="20"/>
-				<box>
-					<topPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5"/>
-				</box>
-				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
-					<font fontName="Angsana New" size="16" isBold="false"/>
-				</textElement>
-				<text><![CDATA[ดอกเบี้ย]]></text>
-			</staticText>
-			<staticText>
-				<reportElement uuid="3526d221-e2d6-4316-bb48-aad4545a918f" x="471" y="0" width="84" height="20"/>
-				<box>
-					<topPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5"/>
-				</box>
-				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
-					<font fontName="Angsana New" size="16" isBold="false"/>
-				</textElement>
-				<text><![CDATA[ยอดคงเหลือใหม่]]></text>
-			</staticText>
-		</band>
-	</columnHeader>
 	<detail>
 		<band height="20" splitType="Stretch">
 			<textField pattern="#,##0.00">
@@ -324,35 +324,35 @@ ORDER BY
 				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
 					<font fontName="Angsana New" size="16" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{deptitem_amt}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{DEPTITEM_AMT}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement uuid="e49e70c1-5990-40f2-a564-03e71c01635c" x="31" y="0" width="85" height="20"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
 					<font fontName="Angsana New" size="16" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{deptaccount_no}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{DEPTACCOUNT_NO}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement uuid="7862aca4-efd3-424e-bbec-90959885cdaa" x="116" y="0" width="185" height="20"/>
 				<textElement verticalAlignment="Middle" markup="none">
 					<font fontName="Angsana New" size="16" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{deptaccount_name}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{DEPTACCOUNT_NAME}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
 				<reportElement uuid="bb19d51c-2fe5-4c37-8222-187d451af086" x="471" y="0" width="84" height="20"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
 					<font fontName="Angsana New" size="16" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{prncbal}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{PRNCBAL}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
 				<reportElement uuid="ae3f17f0-34c4-4a42-a20f-4e33cd765a12" x="301" y="0" width="85" height="20"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
 					<font fontName="Angsana New" size="16" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{balance_forward}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{BALANCE_FORWARD}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement uuid="04e8f0c6-53ce-4193-93bf-74daa916b007" x="0" y="0" width="31" height="20"/>
