@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="r_page_header_portrait_sub" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="e6aca3c7-db3d-4894-bb9a-2c4310523fce">
+	<property name="ireport.zoom" value="2.8531167061100033"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="as_coopid" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="as_reportid" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select * from v_report_header where coop_id = $P{as_coopid} and report_id = $P{as_reportid}]]>
+	</queryString>
+	<field name="COOP_ID" class="java.lang.String"/>
+	<field name="REPORT_ID" class="java.lang.String"/>
+	<field name="REPORT_NAME" class="java.lang.String"/>
+	<field name="APPLICATION_NAME" class="java.lang.String"/>
+	<field name="GROUP_NAME" class="java.lang.String"/>
+	<field name="COOP_NAME" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<summary>
+		<band height="60">
+			<textField>
+				<reportElement uuid="26e7d482-8a37-4725-ab4d-2b066f8e62d2" x="0" y="0" width="100" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{APPLICATION_NAME}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="ee9b3ba8-32de-4a1f-86ca-4a99a536ffc3" x="0" y="20" width="100" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{GROUP_NAME} + " / " + $F{REPORT_ID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="d12bb355-415a-4a32-89a2-0662b566a5f6" x="100" y="0" width="355" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COOP_NAME}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="0c687ee9-4e65-42db-be8f-f952b36f7272" x="455" y="20" width="100" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["วันที่พิมพ์ : "+new SimpleDateFormat("dd MMMM yyyy",new Locale("th","TH")).format(new Date())]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="b4fd7447-0877-40ca-9bf7-e69f736d64fa" x="455" y="40" width="100" height="20"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["เวลาที่พิมพ์ " + new SimpleDateFormat("HH:mm:ss").format(new Date())]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="2e28ee8e-33bf-4560-9e78-fed1ea61d0a0" x="100" y="20" width="355" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{REPORT_NAME}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="1fc80a4b-ac53-448f-a3b9-7edfca92c004" x="0" y="40" width="455" height="20"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement/>
+				<text><![CDATA[]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>
