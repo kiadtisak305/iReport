@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ireport_reqloan_aero_ref_coll" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="ec09988e-74de-4416-bc17-784572d21036">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="as_loanreqdocno" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select  a.ref_collno, a.description, b.loancolltype_desc, b.loancolltype_code  , mg.membgroup_desc, a.collactive_amt
+from lnreqloancoll a
+join lnucfloancolltype b on a.loancolltype_code = b.loancolltype_code
+left join mbmembmaster mb on a.ref_collno = mb.member_no
+left join mbucfmembgroup mg  on mb.membgroup_code = mg.membgroup_code
+where a.loancolltype_code = b.loancolltype_code and a.loanrequest_docno =  $P{as_loanreqdocno} order by a.loancolltype_code, a.seq_no]]>
+	</queryString>
+	<field name="REF_COLLNO" class="java.lang.String"/>
+	<field name="DESCRIPTION" class="java.lang.String"/>
+	<field name="LOANCOLLTYPE_DESC" class="java.lang.String"/>
+	<field name="LOANCOLLTYPE_CODE" class="java.lang.String"/>
+	<field name="MEMBGROUP_DESC" class="java.lang.String"/>
+	<field name="COLLACTIVE_AMT" class="java.math.BigDecimal"/>
+	<detail>
+		<band height="22" splitType="Stretch">
+			<textField>
+				<reportElement uuid="acc230d3-4582-4b01-afb8-17164ef52667" x="0" y="0" width="48" height="20"/>
+				<textElement>
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{LOANCOLLTYPE_DESC}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="8c47f163-a06d-48c2-a660-7a2bd21a41ff" x="48" y="0" width="54" height="20"/>
+				<textElement>
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{REF_COLLNO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="c71ef59c-80a1-4531-b16f-570781f5468d" x="102" y="0" width="168" height="20"/>
+				<textElement>
+					<font fontName="Angsana New" size="13"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DESCRIPTION}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement uuid="bdbf4594-5a61-4138-888e-5fdcf66534b5" x="270" y="0" width="54" height="20"/>
+				<textElement>
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{LOANCOLLTYPE_CODE}=="03"?$F{COLLACTIVE_AMT}:$F{MEMBGROUP_DESC}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

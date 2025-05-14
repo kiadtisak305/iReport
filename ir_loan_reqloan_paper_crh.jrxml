@@ -1,0 +1,950 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ir_loan_reqloan_aero_new2" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="10" bottomMargin="10" uuid="82506ec1-ad34-4c09-8af8-bcbe0627e231">
+	<property name="ireport.zoom" value="1.6105100000000052"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<subDataset name="dataset1" uuid="a6ed1750-794f-4f30-89eb-846967cd869a"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["C:\\GCOOP_ALL\\CRH\\GCOOP\\iReport\\Reports\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="as_loanrequest_docno" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select
+(select coop_name from cmcoopmaster cm where cm.coop_id = lnq.coop_id) as coop_name,
+mb.birth_date,
+mb.retire_date,
+mb.member_date,
+mb.work_date,
+mb.tranmem_date,
+lt.loantype_desc,
+FT_GETMEMNAME(lnq.coop_id,lnq.member_no) as fullname ,
+mp.membtype_desc,
+mg.membgroup_desc,
+mb.salary_id ,
+lj.loanobjective_desc,
+mt.moneytype_desc,
+cb.bank_desc,
+cbb.branch_name,
+(case
+when lnq.loanrequest_status = '8' then 'รออนุมัติ'
+when lnq.loanrequest_status = '1' then 'อนุมัติ'
+when lnq.loanrequest_status =  '-9'  then 'ไม่อนุมัติ'
+when lnq.loanrequest_status = '12' then 'จ่ายแล้ว'
+else ' ' end) as loanrequsetstatus ,
+
+(case
+when lnq.loanpayment_type = '0' then 'ไม่มีเรียกเก็บ'
+when lnq.loanpayment_type = '1' then 'ต้นเท่ากัน'
+when lnq.loanpayment_type =  '2'  then 'ต้น+ดอกเท่ากัน'
+when lnq.loanpayment_type = '3' then 'ส่งแต่ดอกเบี้ย'
+when lnq.loanpayment_type = '4' then 'อัตราก้าวหน้า'
+else ' ' end) as payment_desc ,
+lpf.loanpaymentfrom_desc,
+lnq.*
+from lnreqloan  lnq
+left join mbmembmaster mb on lnq.member_no = mb.member_no
+left join mbucfmembtype mp on mb.membtype_code = mp.membtype_code
+left join mbucfmembgroup mg on mb.membgroup_code = mg.membgroup_code
+left join lnucfloanobjective lj on lnq.loanobjective_code = lj.loanobjective_code
+left join lnloantype lt on lnq.loantype_code = lt.loantype_code
+left join cmucfmoneytype mt  on  mt.moneytype_code  = lnq.expense_code
+left join cmucfbank cb on lnq.expense_bank = cb.bank_code
+left join cmucfbankbranch cbb on lnq.expense_branch = cbb.branch_id  and   lnq.expense_bank = cbb.bank_code
+left join lnucfpaymentfrom lpf on lnq.loanpayment_from =  lpf.loanpayment_from
+where lnq.loanrequest_docno = $P{as_loanrequest_docno}
+order by  lnq.loanrequest_docno asc,lnq.loantype_code asc,lnq.loanrequest_date asc]]>
+	</queryString>
+	<field name="COOP_NAME" class="java.lang.String"/>
+	<field name="BIRTH_DATE" class="java.sql.Timestamp"/>
+	<field name="RETIRE_DATE" class="java.sql.Timestamp"/>
+	<field name="MEMBER_DATE" class="java.sql.Timestamp"/>
+	<field name="WORK_DATE" class="java.sql.Timestamp"/>
+	<field name="TRANMEM_DATE" class="java.sql.Timestamp"/>
+	<field name="LOANTYPE_DESC" class="java.lang.String"/>
+	<field name="FULLNAME" class="java.lang.String"/>
+	<field name="MEMBTYPE_DESC" class="java.lang.String"/>
+	<field name="MEMBGROUP_DESC" class="java.lang.String"/>
+	<field name="SALARY_ID" class="java.lang.String"/>
+	<field name="LOANOBJECTIVE_DESC" class="java.lang.String"/>
+	<field name="MONEYTYPE_DESC" class="java.lang.String"/>
+	<field name="BANK_DESC" class="java.lang.String"/>
+	<field name="BRANCH_NAME" class="java.lang.String"/>
+	<field name="LOANREQUSETSTATUS" class="java.lang.String"/>
+	<field name="PAYMENT_DESC" class="java.lang.String"/>
+	<field name="LOANPAYMENTFROM_DESC" class="java.lang.String"/>
+	<field name="COOP_ID" class="java.lang.String"/>
+	<field name="LOANREQUEST_DOCNO" class="java.lang.String"/>
+	<field name="MEMCOOP_ID" class="java.lang.String"/>
+	<field name="MEMBER_NO" class="java.lang.String"/>
+	<field name="LOANTYPE_CODE" class="java.lang.String"/>
+	<field name="LOANOBJECTIVE_CODE" class="java.lang.String"/>
+	<field name="LOANREQUEST_DATE" class="java.sql.Timestamp"/>
+	<field name="REF_MOUNO" class="java.lang.String"/>
+	<field name="REF_REGISTERNO" class="java.lang.String"/>
+	<field name="LOANRIGHT_PERCSHARE" class="java.math.BigDecimal"/>
+	<field name="LOANRIGHT_PERCSALARY" class="java.math.BigDecimal"/>
+	<field name="LOANREQREGIS_AMT" class="java.math.BigDecimal"/>
+	<field name="LOANCREDIT_AMT" class="java.math.BigDecimal"/>
+	<field name="LOANGRPCREDIT_AMT" class="java.math.BigDecimal"/>
+	<field name="LOANGRPUSE_AMT" class="java.math.BigDecimal"/>
+	<field name="LOANPERMISS_AMT" class="java.math.BigDecimal"/>
+	<field name="LOANREQUEST_AMT" class="java.math.BigDecimal"/>
+	<field name="MAXPERIOD_PAYAMT" class="java.math.BigDecimal"/>
+	<field name="MAXSEND_PAYAMT" class="java.math.BigDecimal"/>
+	<field name="CUSTOMPAYMENT_FLAG" class="java.math.BigDecimal"/>
+	<field name="LOANPAYMENT_TYPE" class="java.math.BigDecimal"/>
+	<field name="LOANPAYMENT_FROM" class="java.lang.String"/>
+	<field name="PERIOD_PAYAMT" class="java.math.BigDecimal"/>
+	<field name="PERIOD_PAYMENT" class="java.math.BigDecimal"/>
+	<field name="PERIOD_LASTPAYMENT" class="java.math.BigDecimal"/>
+	<field name="SHARE_PERIODVALUE" class="java.math.BigDecimal"/>
+	<field name="SHARE_PAYSTATUS" class="java.math.BigDecimal"/>
+	<field name="SHARE_LASTPERIOD" class="java.math.BigDecimal"/>
+	<field name="SHARE_BALANCE" class="java.math.BigDecimal"/>
+	<field name="SHARE_PAR" class="java.math.BigDecimal"/>
+	<field name="SHARE_BUYMAX" class="java.math.BigDecimal"/>
+	<field name="SALARY_AMT" class="java.math.BigDecimal"/>
+	<field name="PAYMONTH_COOP" class="java.math.BigDecimal"/>
+	<field name="PAYMONTH_EXP" class="java.math.BigDecimal"/>
+	<field name="PAYMONTH_OTHER" class="java.math.BigDecimal"/>
+	<field name="PAYMONTH_LNREQ" class="java.math.BigDecimal"/>
+	<field name="INCOMEMONTH_FIX" class="java.math.BigDecimal"/>
+	<field name="INCOMEMONTH_OTHER" class="java.math.BigDecimal"/>
+	<field name="MINSALARY_PERC" class="java.math.BigDecimal"/>
+	<field name="MINSALARY_AMT" class="java.math.BigDecimal"/>
+	<field name="LOANREQUEST_STATUS" class="java.math.BigDecimal"/>
+	<field name="EXPENSE_CODE" class="java.lang.String"/>
+	<field name="EXPENSE_BANK" class="java.lang.String"/>
+	<field name="EXPENSE_BRANCH" class="java.lang.String"/>
+	<field name="EXPENSE_ACCID" class="java.lang.String"/>
+	<field name="APPROVE_DATE" class="java.sql.Timestamp"/>
+	<field name="APPROVE_ID" class="java.lang.String"/>
+	<field name="LOANAPPROVE_AMT" class="java.math.BigDecimal"/>
+	<field name="LOANCONTRACT_NO" class="java.lang.String"/>
+	<field name="APVIMMEDIATE_STATUS" class="java.math.BigDecimal"/>
+	<field name="OD_FLAG" class="java.math.BigDecimal"/>
+	<field name="ENTRY_ID" class="java.lang.String"/>
+	<field name="ENTRY_DATE" class="java.sql.Timestamp"/>
+	<field name="ENTRY_BYCOOPID" class="java.lang.String"/>
+	<field name="LOANRCVFIX_FLAG" class="java.math.BigDecimal"/>
+	<field name="LOANRCVFIX_DATE" class="java.sql.Timestamp"/>
+	<field name="INT_CONTINTTYPE" class="java.math.BigDecimal"/>
+	<field name="INT_CONTINTRATE" class="java.math.BigDecimal"/>
+	<field name="INT_CONTINTTABCODE" class="java.lang.String"/>
+	<field name="INT_CONTINTINCREASE" class="java.math.BigDecimal"/>
+	<field name="INT_INTSTEPTYPE" class="java.math.BigDecimal"/>
+	<field name="CONTRACT_TIME" class="java.math.BigDecimal"/>
+	<field name="CANCEL_ID" class="java.lang.String"/>
+	<field name="CANCEL_DATE" class="java.sql.Timestamp"/>
+	<field name="IDENTIFYCONT_INTRATE" class="java.math.BigDecimal"/>
+	<field name="INTCERTIFICATE_STATUS" class="java.math.BigDecimal"/>
+	<field name="LNOVERRETRY_STATUS" class="java.math.BigDecimal"/>
+	<field name="LNOVERRETRY_PERIOD" class="java.math.BigDecimal"/>
+	<field name="BIRTH_AGE" class="java.math.BigDecimal"/>
+	<field name="RETRY_AGE" class="java.math.BigDecimal"/>
+	<field name="MEMBER_AGE" class="java.math.BigDecimal"/>
+	<field name="WORK_AGE" class="java.math.BigDecimal"/>
+	<field name="TOTALDAY_INT" class="java.math.BigDecimal"/>
+	<field name="INTESTIMATE_AMT" class="java.math.BigDecimal"/>
+	<field name="RECVESTIMATE_AMT" class="java.math.BigDecimal"/>
+	<field name="REMARK" class="java.lang.String"/>
+	<field name="MAXPAYLONSAL_AMT" class="java.math.BigDecimal"/>
+	<field name="MAXPAYLONSAL_PERCENT" class="java.math.BigDecimal"/>
+	<field name="LOANPAY_ACCID" class="java.lang.String"/>
+	<field name="LOANREQUEST_TYPE" class="java.math.BigDecimal"/>
+	<field name="PROGRESSRATE_FLAG" class="java.math.BigDecimal"/>
+	<field name="PROGESS_RATE" class="java.math.BigDecimal"/>
+	<field name="INTPROMOTION_CODE" class="java.lang.String"/>
+	<field name="PAYMENT_STATUS" class="java.math.BigDecimal"/>
+	<field name="CONTNO_NUM" class="java.lang.String"/>
+	<field name="INSURE_AMT" class="java.math.BigDecimal"/>
+	<field name="DEPT_AMT" class="java.math.BigDecimal"/>
+	<field name="PAYMONTH_OTHER2" class="java.math.BigDecimal"/>
+	<field name="PAYMONTH_OTHER3" class="java.math.BigDecimal"/>
+	<field name="PAYMONTH_OTHER4" class="java.math.BigDecimal"/>
+	<field name="SALARY_30" class="java.math.BigDecimal"/>
+	<field name="SALARY_70" class="java.math.BigDecimal"/>
+	<field name="DOCUMENT_NO" class="java.lang.String"/>
+	<field name="SYNC_NOTIFY_FLAG" class="java.lang.String"/>
+	<field name="INTRATE_INCREASE" class="java.math.BigDecimal"/>
+	<field name="FEE_CODE" class="java.lang.String"/>
+	<field name="STEPPAYMENT_TYPE" class="java.math.BigDecimal"/>
+	<field name="DEFPAYINT_TYPE" class="java.math.BigDecimal"/>
+	<field name="DUEPAYMENT_DATE" class="java.math.BigDecimal"/>
+	<field name="INSBUYLOAN_FLAG" class="java.math.BigDecimal"/>
+	<field name="INTEREST_FUTURE" class="java.math.BigDecimal"/>
+	<field name="NETRCVSALRY_AMT" class="java.math.BigDecimal"/>
+	<field name="SALARY_BA" class="java.math.BigDecimal"/>
+	<field name="SALARY_BAL" class="java.math.BigDecimal"/>
+	<field name="LNPERMGRP_CODE" class="java.lang.String"/>
+	<field name="KPRCV_PERIOD" class="java.lang.String"/>
+	<field name="KPINCSAL_AMT" class="java.math.BigDecimal"/>
+	<field name="SALARYBAL_CODE" class="java.lang.String"/>
+	<field name="NETRCVSALRY1_AMT" class="java.math.BigDecimal"/>
+	<field name="NETRCVSALRY2_AMT" class="java.math.BigDecimal"/>
+	<field name="NETRCVSALRY3_AMT" class="java.math.BigDecimal"/>
+	<field name="SALARYBAL_TYPE" class="java.math.BigDecimal"/>
+	<field name="FIRSTPERIOD_PAYAMT" class="java.math.BigDecimal"/>
+	<field name="FIRSTPERIOD_PAYMENT" class="java.math.BigDecimal"/>
+	<field name="SECONDPERIOD_PAYAMT" class="java.math.BigDecimal"/>
+	<field name="SECONDPERIOD_PAYMENT" class="java.math.BigDecimal"/>
+	<field name="PERIODBAL_PAYMENT" class="java.math.BigDecimal"/>
+	<field name="BFRETIRE_PERIOD" class="java.math.BigDecimal"/>
+	<field name="BFRETIRE_PAYMENT" class="java.math.BigDecimal"/>
+	<field name="AFRETIRE_PERIOD" class="java.math.BigDecimal"/>
+	<field name="AFRETIRE_PAYMENT" class="java.math.BigDecimal"/>
+	<field name="SALMINBFCAL_AMT" class="java.math.BigDecimal"/>
+	<field name="AFINTESTIMATE_AMT" class="java.math.BigDecimal"/>
+	<field name="RETIRESALARY_AMOUNT" class="java.math.BigDecimal"/>
+	<field name="RETIRESHARE_BALANCE" class="java.math.BigDecimal"/>
+	<field name="SHR90PERCEN_AMT" class="java.math.BigDecimal"/>
+	<field name="LONATRETIRE_AMT" class="java.math.BigDecimal"/>
+	<field name="SALARY_PERC" class="java.math.BigDecimal"/>
+	<field name="LOANRECEIVEPERIOD_FLAG" class="java.math.BigDecimal"/>
+	<field name="PRINCIPAL_PAYMENT" class="java.math.BigDecimal"/>
+	<field name="INT_PAYMENT" class="java.math.BigDecimal"/>
+	<field name="SUMINT_PAYMENT" class="java.math.BigDecimal"/>
+	<field name="SALARY_AMOUNT" class="java.math.BigDecimal"/>
+	<field name="COMPLETEDOC_FLAG" class="java.math.BigDecimal"/>
+	<field name="REMARK_CREDITSCORE" class="java.lang.String"/>
+	<field name="REMARK_SCORERING" class="java.lang.String"/>
+	<field name="INTPAYMENT_FLAG" class="java.math.BigDecimal"/>
+	<field name="LOANPAYMENT_TYPE_DESC" class="java.lang.String"/>
+	<field name="INCOMEALL_AMT" class="java.math.BigDecimal"/>
+	<field name="STARTKEEP_DATE" class="java.sql.Timestamp"/>
+	<group name="req" isStartNewPage="true">
+		<groupExpression><![CDATA[$F{LOANREQUEST_DOCNO}]]></groupExpression>
+	</group>
+	<pageHeader>
+		<band height="60">
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="4b7cf3db-46be-4fb4-92b2-09c59aabff7b" x="0" y="20" width="555" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["รายงานเกี่ยวกับวงเงินกู้ของผู้กู้"]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="dfea50ee-ba85-4378-abbf-1c7880a834d0" x="0" y="40" width="555" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["ใบคำขอเลขที่ " + $F{LOANREQUEST_DOCNO}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="78a8371a-80d3-43c8-8fc2-c07d462f5f07" x="0" y="0" width="555" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COOP_NAME}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="374" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="d531614d-419e-48e7-94d4-88fbc912b9c9" x="58" y="1" width="102" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{LOANREQUEST_DOCNO}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="81955907-db26-4e46-8f65-3428331ace1a" x="58" y="21" width="102" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{MEMBER_NO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="a208fc06-d1be-4633-a202-1e2601b18c6e" x="0" y="1" width="58" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+					<paragraph rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[เลขที่ใบขอกู้:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="ddaf68bf-7abb-4ce7-8c64-82d6a4e45484" x="0" y="21" width="58" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+					<paragraph rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[เลขสมาชิก:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="ad686ef1-fa3a-4ab9-922e-ccb83aca5aa3" x="406" y="1" width="149" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{LOANTYPE_CODE} + " - " + $F{LOANTYPE_DESC}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="9e941a9a-629a-4aaf-8711-5dd40fc6bfbb" x="212" y="1" width="128" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy",new Locale("th","TH")).format($F{LOANREQUEST_DATE})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="8f975f21-ebee-4ea7-b71e-62dff2093575" x="160" y="1" width="52" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+					<paragraph rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[วันที่ขอกู้:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="6966b4f8-af2b-4314-87a3-95ac8242fec8" x="340" y="1" width="66" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<text><![CDATA[ประเภทเงินกู้:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="2fb2ad86-28b6-4e8c-b1b1-e7e99fe4b138" x="0" y="41" width="58" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+					<paragraph rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[สังกัด:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="08f9e81a-3cf0-49db-a881-3722d6da02a7" x="265" y="41" width="141" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy",new Locale("th","TH")).format($F{LOANRCVFIX_DATE})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="394d1be6-315f-4903-8935-71cbe7db1bfc" x="406" y="41" width="47" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+					<paragraph rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[สถานะ :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="f6644d04-2574-42df-b9b9-ef800a4047bb" x="212" y="41" width="53" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+					<paragraph rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[วันที่จ่าย :]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="e64d726f-9c78-448c-bc7e-d89da3c0febf" x="453" y="41" width="102" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14" isBold="true"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{LOANREQUSETSTATUS}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="80776bef-03ac-4a5b-93dc-4fbe4b3dafc2" x="58" y="99" width="86" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy",new Locale("th","TH")).format($F{BIRTH_DATE})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="32e2db0e-2772-43be-a7b8-1f63c6c73fd3" x="212" y="21" width="53" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA["ชื่อ-สกุล"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="5db7ed1e-8bf1-49bb-8ff1-57d01c3da80c" x="0" y="77" width="183" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[ข้อมูลประกอบการขอกู้:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b21b1cbf-6186-49f4-9ba2-5ea9d2b5e670" x="0" y="99" width="58" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<text><![CDATA[วันเกิด:]]></text>
+			</staticText>
+			<textField pattern="#,##0.00">
+				<reportElement uuid="428fc6cd-3512-40ae-948d-3437581149af" x="278" y="140" width="100" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{LOANCREDIT_AMT}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="d38bf2fc-24ab-4f4b-bd02-508624c81045" x="144" y="99" width="39" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{BIRTH_AGE}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement uuid="306342ee-7eb2-4f1c-b2e6-c562d7aa4bdc" x="60" y="283" width="62" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+					<paragraph rightIndent="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PAYMONTH_EXP}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement uuid="fb7e8f5d-37e7-42ae-89f0-03b3488e26ff" x="60" y="243" width="123" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+					<paragraph rightIndent="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SALARY_AMOUNT}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement uuid="33b7986d-f6c4-4078-bf70-605202c4f2d8" x="60" y="343" width="62" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+					<paragraph rightIndent="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{MINSALARY_PERC}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement uuid="8e40c460-828e-49aa-8e66-738bb6065c27" x="60" y="303" width="62" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+					<paragraph rightIndent="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{INCOMEMONTH_FIX}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement uuid="55c2c0b4-8685-44f4-94ed-0f21a03597d2" x="60" y="263" width="62" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+					<paragraph rightIndent="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PAYMONTH_COOP}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="6142dba1-6763-4d03-baa0-ce2dafc25e1f" x="276" y="283" width="188" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{EXPENSE_BANK}  == null ? "" : $F{EXPENSE_BANK} + " - " + $F{BANK_DESC}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement uuid="2dd4afc1-f1f0-4014-bd23-9dc952df933e" x="212" y="219" width="166" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{RECVESTIMATE_AMT}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="051a0763-fd5b-45f0-8339-96e76625195a" x="276" y="263" width="188" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{MONEYTYPE_DESC}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="ef62c050-a4cb-49b2-ad94-8b93841e6ae2" x="453" y="97" width="102" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{IDENTIFYCONT_INTRATE}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement uuid="0eb9175c-fc3b-4acd-b385-687b0fd3b4ff" x="60" y="323" width="62" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+					<paragraph rightIndent="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SALARY_PERC}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="d3e774e9-261d-4447-9257-3ba22ef5f58f" x="0" y="119" width="58" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<text><![CDATA[วันเกษียณ:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="d5979bc9-ef31-4cf8-a66d-aabf000bccb7" x="0" y="139" width="58" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<text><![CDATA[เป็นสมาชิก:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="3b482b18-a819-4220-aa1f-d9aef90f0404" x="0" y="159" width="58" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<text><![CDATA[วันเข้าทำงาน:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="2d4c1ab8-ed10-4d3f-a279-6aaecf9beb74" x="0" y="179" width="58" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<text><![CDATA[วันโอนย้าย:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="f60ca0b4-c89a-4af5-8176-c4e4bd71d55b" x="0" y="199" width="58" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<text><![CDATA[ทุนเรือนหุ้น:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="95793018-b52d-4d3c-ac9d-73530b0481b1" x="0" y="243" width="58" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="13"/>
+				</textElement>
+				<text><![CDATA[เงินเดือน:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="85d739fb-3185-4d75-b298-eed1bfe6e396" x="265" y="21" width="141" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{FULLNAME}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="939eceeb-7e02-4905-a2ea-627d94b70cbc" x="406" y="21" width="149" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{MEMBTYPE_DESC}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="866a2a6b-0017-4a09-b796-0720ceeda287" x="58" y="41" width="154" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{MEMBGROUP_DESC}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="5629e22e-282b-463e-bd0f-1e198cf4ddb4" x="212" y="77" width="166" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[วัตถุประสงค์ สิทธิการกู้:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="5e22533c-2f40-4fe1-9de1-987a2455b534" x="395" y="77" width="160" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[เงื่อนไขอัตราดอกเบี้ย:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="7271ec38-6bba-4de9-8b61-63f9eab456fa" x="58" y="119" width="86" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy",new Locale("th","TH")).format($F{RETIRE_DATE})]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="2b1a9f5a-442f-47c1-bfe6-ff139c308809" x="144" y="119" width="39" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{RETRY_AGE}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="a5820f21-d67b-4e84-95e7-6f5ae9e0053a" x="58" y="139" width="86" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy",new Locale("th","TH")).format($F{MEMBER_DATE})]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="f3f78a34-1a11-4d7c-973e-5a0f74695dfe" x="144" y="139" width="39" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{MEMBER_AGE}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="fab0323b-2e25-4db5-bfae-a445338fe950" x="58" y="159" width="86" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy",new Locale("th","TH")).format($F{WORK_DATE})]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="e3506c47-8465-4413-9327-a7d821a9f7da" x="144" y="159" width="39" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{WORK_AGE}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="600fd93c-6106-4c26-87e0-e768b6c0c137" x="58" y="179" width="86" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy",new Locale("th","TH")).format($F{TRANMEM_DATE})]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="d5a00869-6c36-4cc9-b042-b182a07c4a15" x="144" y="179" width="39" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TOTALDAY_INT}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement uuid="3fda271d-f280-44b6-9d8c-c14bbcbd7b2a" x="58" y="199" width="64" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SHARE_PERIODVALUE}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="544171a5-d3a5-4d77-9cb8-af044d210bfb" x="122" y="199" width="61" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SHARE_BALANCE}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="75dee545-66d3-4e79-8ec2-b39402c276bd" x="212" y="119" width="51" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[สิทธิการกู้:]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement uuid="e99c28ff-90f0-42a8-8fbf-14194defb928" x="269" y="125" width="10" height="10"/>
+			</rectangle>
+			<rectangle>
+				<reportElement uuid="a6cae61b-2fdd-4aa7-9d4f-743a64c83207" x="328" y="126" width="10" height="10"/>
+			</rectangle>
+			<staticText>
+				<reportElement uuid="c33d3444-79cc-459b-82ef-1b103892061a" x="281" y="119" width="37" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="12"/>
+				</textElement>
+				<text><![CDATA[ วงเงินOD]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="59e740c7-ed73-41b7-9d4e-d43b8c61f939" x="341" y="120" width="37" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="12"/>
+				</textElement>
+				<text><![CDATA[หุ้นรอเก็บ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="c94e48ed-4fa5-4a98-964c-2f4ee45575ad" x="395" y="117" width="160" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[การชำระ:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="514f32cc-fb04-496c-8aea-858bcd462994" x="0" y="220" width="183" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[เงินเดือนคงเหลือ:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="0e80cd33-c041-42a3-8621-3909f627dc87" x="395" y="197" width="69" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<text><![CDATA[ประเภทการส่ง:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="1e48cabd-b9ac-4542-be4c-9745dace49e1" x="395" y="137" width="69" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<text><![CDATA[ชำระงวด:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="44ea6fa8-0330-4fac-b485-4213b44767c0" x="395" y="157" width="69" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<text><![CDATA[จำนวนงวด:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="06886cde-b566-471f-9e08-23b8c2594ed9" x="395" y="177" width="69" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<text><![CDATA[งวดสุดท้าย:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b134d3b7-af61-4ea3-8d8e-75245050e84f" x="395" y="217" width="69" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<text><![CDATA[การชำระแบบ:]]></text>
+			</staticText>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement uuid="379608a7-15b9-4bd7-b54a-5e34b4ec80c2" x="464" y="137" width="91" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PERIOD_PAYMENT}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement uuid="746cb238-48ed-4899-a712-60f204b1cbb0" x="464" y="157" width="91" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PERIOD_PAYMENT}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement uuid="4cd1e4ce-066d-4556-92e7-65aadcd083e4" x="464" y="177" width="91" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PERIOD_LASTPAYMENT}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="99c2547e-b75a-4935-842b-4be15a62a361" x="464" y="197" width="91" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PAYMENT_DESC}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="091bb4c0-bd12-4ea6-9ee2-70bacdc3d6ec" x="464" y="217" width="91" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{LOANPAYMENTFROM_DESC}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="b93fffb6-195d-4817-870b-dc70e1aef886" x="212" y="140" width="64" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<text><![CDATA[สิทธิ์กู้ที่ได้:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="00b19e75-7c32-4818-9d56-17bc663c448d" x="212" y="160" width="64" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<text><![CDATA[สิทธิกู้สุทธิ:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="7e55b82c-09df-4369-b562-013164d615cd" x="212" y="180" width="64" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<text><![CDATA[ให้กู้:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b4ed8f38-2aa4-4657-a9cf-3d7fd129fd58" x="212" y="200" width="64" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<text><![CDATA[ดอกเบี้ยประมาณ:]]></text>
+			</staticText>
+			<textField pattern="#,##0.00">
+				<reportElement uuid="649a999b-8256-4e95-a706-3b2b155e60dd" x="278" y="160" width="100" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{LOANPERMISS_AMT}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement uuid="1bd0b701-fd59-47da-9619-a18492382392" x="278" y="180" width="100" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{LOANREQUEST_AMT}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement uuid="0bf8bb4a-e0aa-4ddc-89b5-de2be156c4ee" x="278" y="200" width="100" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{INTESTIMATE_AMT}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="d71eabbb-528e-428a-9d4e-4bf6227a6916" x="0" y="263" width="58" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="13"/>
+				</textElement>
+				<text><![CDATA[ยอดหักจาก สก:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="9df5ac25-1ff1-49b0-8dcc-142a587fa1c3" x="0" y="283" width="58" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="13"/>
+				</textElement>
+				<text><![CDATA[ยอดหักอื่นๆ:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="c38fbb19-6a94-41c4-8aa6-cb594ee26931" x="0" y="303" width="58" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="13"/>
+				</textElement>
+				<text><![CDATA[เงินได้อื่นๆ:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="7cea5177-4113-4935-843f-09cc01906d4e" x="0" y="323" width="58" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="13"/>
+				</textElement>
+				<text><![CDATA[ง/ด คงเหลือ:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="168fd8c1-b541-4ce9-ac0c-0a8df1cd8a67" x="0" y="343" width="58" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="13"/>
+				</textElement>
+				<text><![CDATA[ง/ด ขั้นต่ำ:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="88314afa-a65f-4210-b4b6-c4e27623bfde" x="214" y="243" width="164" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[การจ่ายเงินกู้:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="1fbfd340-24f2-487f-a2d4-a08ef12474a0" x="214" y="263" width="58" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="13"/>
+				</textElement>
+				<text><![CDATA[จ่ายเงินกู้เป็น:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="3cf68ab4-9df1-4480-8d6a-28f2298d998c" x="214" y="283" width="58" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="13"/>
+				</textElement>
+				<text><![CDATA[ธนาคาร:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="71b0ee62-e4a6-4a92-99d2-0c38a01353fd" x="214" y="303" width="58" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="13"/>
+				</textElement>
+				<text><![CDATA[สาขา:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="d06a7ca4-8551-467d-9b4e-49f787a4e29d" x="214" y="323" width="58" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="13"/>
+				</textElement>
+				<text><![CDATA[เลขที่บัญชี:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="c7823ea5-7b3e-4910-b790-aa5d771ece6d" x="276" y="303" width="188" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{EXPENSE_BRANCH}  == null ? "" : $F{EXPENSE_BRANCH} + " - " + $F{BRANCH_NAME}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="6e95983e-dc77-4ff2-ac63-af24b6225b9c" x="276" y="323" width="188" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{EXPENSE_ACCID}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="f90b8e82-feff-4bf5-a6c8-17bde9c0092e" x="395" y="97" width="58" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<text><![CDATA[อัตราดอกเบี้ย:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="0765e49e-7fe0-44de-9fe0-f6168eb55ff3" x="214" y="99" width="164" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{LOANOBJECTIVE_CODE} + " - " + $F{LOANOBJECTIVE_DESC}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement uuid="23c489e1-79de-42f2-928d-424dfd5bf428" x="122" y="263" width="62" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+					<paragraph rightIndent="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PAYMONTH_LNREQ}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement uuid="212f8a83-3da8-4ee9-9c48-587722de177b" x="122" y="283" width="62" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+					<paragraph rightIndent="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PAYMONTH_OTHER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement uuid="2c15af51-d107-48c2-8658-bbfaf912f487" x="122" y="303" width="62" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+					<paragraph rightIndent="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{INCOMEMONTH_OTHER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement uuid="f5de3ac3-9e9e-4eec-8cbc-239eb959d287" x="122" y="323" width="62" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+					<paragraph rightIndent="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SALARY_AMT}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement uuid="b3bbd9cf-631f-45e8-bc65-b12c47204776" x="122" y="343" width="62" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+					<paragraph rightIndent="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{MINSALARY_AMT}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="70">
+			<subreport>
+				<reportElement uuid="79c39363-c8a7-4195-9137-698eb998bcb4" x="0" y="0" width="555" height="70"/>
+				<subreportParameter name="loanrequestdocno">
+					<subreportParameterExpression><![CDATA[$F{LOANREQUEST_DOCNO}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["sub_reqloancoll.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="63">
+			<subreport>
+				<reportElement uuid="e6ee5057-a5f6-45d7-8a3f-0e7e51fb82c5" x="0" y="0" width="555" height="63"/>
+				<subreportParameter name="loaneqquest">
+					<subreportParameterExpression><![CDATA[$F{LOANREQUEST_DOCNO}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["sub_reqloanclr.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="50">
+			<subreport>
+				<reportElement uuid="8b2f5e9c-2f80-4904-b20f-f733b6b7e132" x="0" y="0" width="555" height="50"/>
+				<subreportParameter name="req">
+					<subreportParameterExpression><![CDATA[$F{LOANREQUEST_DOCNO}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["sub_reqloanclrother.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+</jasperReport>

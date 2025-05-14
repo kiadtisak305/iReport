@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="sub_reqloancoll" language="groovy" pageWidth="555" pageHeight="802" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="b5d986e2-c55d-46b1-8668-b6e16b1fb8c7">
+	<property name="ireport.zoom" value="1.7715610000000026"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="loanrequestdocno" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["C:\\CLIENT(SPA)\\iReport\\"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select
+lnucfloancolltype.loancolltype_desc ,
+mb.salary_amount,
+lnreqloancoll.*
+from lnreqloancoll
+left join lnucfloancolltype on lnreqloancoll.loancolltype_code = lnucfloancolltype.loancolltype_code
+left join mbmembmaster mb on mb.member_no = lnreqloancoll.ref_collno
+where loanrequest_docno = $P{loanrequestdocno}]]>
+	</queryString>
+	<field name="LOANCOLLTYPE_DESC" class="java.lang.String"/>
+	<field name="SALARY_AMOUNT" class="java.math.BigDecimal"/>
+	<field name="COOP_ID" class="java.lang.String"/>
+	<field name="LOANREQUEST_DOCNO" class="java.lang.String"/>
+	<field name="SEQ_NO" class="java.math.BigDecimal"/>
+	<field name="LOANCOLLTYPE_CODE" class="java.lang.String"/>
+	<field name="REFCOOP_ID" class="java.lang.String"/>
+	<field name="REF_COLLNO" class="java.lang.String"/>
+	<field name="DESCRIPTION" class="java.lang.String"/>
+	<field name="COLLBASE_AMT" class="java.math.BigDecimal"/>
+	<field name="COLLBASE_PERCENT" class="java.math.BigDecimal"/>
+	<field name="COLLUSED_AMT" class="java.math.BigDecimal"/>
+	<field name="COLLBALANCE_AMT" class="java.math.BigDecimal"/>
+	<field name="COLLMAX_AMT" class="java.math.BigDecimal"/>
+	<field name="COLLACTIVE_AMT" class="java.math.BigDecimal"/>
+	<field name="COLLACTIVE_PERCENT" class="java.math.BigDecimal"/>
+	<field name="COLLRETURNVAL_STATUS" class="java.math.BigDecimal"/>
+	<field name="COLLRETURNVAL_FLAG" class="java.math.BigDecimal"/>
+	<field name="COLLFIXCONT_FLAG" class="java.math.BigDecimal"/>
+	<field name="COLLPERMISS_FLAG" class="java.math.BigDecimal"/>
+	<field name="COLLACTSEQUEST_AMT" class="java.math.BigDecimal"/>
+	<field name="NETRCVSALRY_AMT" class="java.math.BigDecimal"/>
+	<field name="SALARY_AMT" class="java.math.BigDecimal"/>
+	<pageHeader>
+		<band height="37">
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="d5d5aa05-b505-447a-b46b-5464b6c5f0a0" x="0" y="0" width="555" height="25"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="16" isBold="true" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["รายงานเกี่ยวกับวงเงินกู้ของผู้ค้ำประกัน"]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="60">
+			<staticText>
+				<reportElement uuid="d3602526-161a-42b8-a9ea-f644a3b6ff7d" x="0" y="20" width="29" height="40"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ลำดับ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="ae102461-ce14-48bb-a77d-e152bf118105" x="29" y="20" width="150" height="40"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ชื่อผู้ค้ำประกัน]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="f7da1d8c-37d8-424f-ad18-8a10c5062a39" x="368" y="20" width="187" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[การค้ำประกันกับรายอื่น]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="6b676032-9b17-45b3-b6b0-5f6cbb42c51e" x="241" y="20" width="59" height="40"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[จำกัดวงเงินค้ำประกัน]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="e0466bb8-571e-48eb-9008-6660aa04afb4" x="179" y="20" width="62" height="40"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[เงินเดือน]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="9e3db4b0-267e-4a90-beac-e695ca70d6cd" x="300" y="20" width="68" height="40"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[วงเงินค้ำคงเหลือ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b9dceff5-3cc4-4730-ad17-a6314862e10f" x="368" y="40" width="111" height="20"/>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ชื่อผู้ค้ำประกัน]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="4b5ce5e8-48df-41d8-aafa-999194611846" x="479" y="40" width="76" height="20"/>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ต้นเงินที่ค้ำประกัน]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="336050af-2c98-432c-b488-30f611fc15a7" x="0" y="0" width="555" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14" isBold="true"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA["วงเงินกู้ของผู้ค้ำประกัน จำนวนต้นเงินที่ต้องค้ำประกัน " + " บาท"]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="561340e6-d57f-45d9-8f8b-7dcf875413af" x="0" y="0" width="29" height="20"/>
+				<box>
+					<leftPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement uuid="a0418426-ed3e-4e46-9607-8e35424ff7cf" x="179" y="0" width="62" height="20"/>
+				<box>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+					<paragraph rightIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SALARY_AMOUNT}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="bd12536f-2c15-4834-86e9-bf0a979e45f5" x="29" y="0" width="150" height="20"/>
+				<box>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DESCRIPTION}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement uuid="a44cc79b-9ac4-473f-a21b-31a459fec43f" x="241" y="0" width="59" height="20"/>
+				<box>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+					<paragraph rightIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COLLBALANCE_AMT}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement uuid="ac36bb55-222f-4161-89b4-5537ebb4554a" x="300" y="0" width="68" height="20"/>
+				<box>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+					<paragraph rightIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COLLBALANCE_AMT}]]></textFieldExpression>
+			</textField>
+			<subreport>
+				<reportElement uuid="178c9f4d-f35a-48e9-9f9a-4445554c2075" x="368" y="0" width="187" height="20"/>
+				<subreportParameter name="ref_collno">
+					<subreportParameterExpression><![CDATA[$F{REF_COLLNO}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["sub_contcoll_dla.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+</jasperReport>

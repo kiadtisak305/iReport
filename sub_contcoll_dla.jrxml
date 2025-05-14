@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="sub_reqloancoll" language="groovy" pageWidth="191" pageHeight="802" whenNoDataType="AllSectionsNoDetail" columnWidth="191" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="b5d986e2-c55d-46b1-8668-b6e16b1fb8c7">
+	<property name="ireport.zoom" value="1.6105100000000023"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="ref_collno" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select * from lncontcoll where ref_collno = $P{ref_collno}]]>
+	</queryString>
+	<field name="COOP_ID" class="java.lang.String"/>
+	<field name="LOANCONTRACT_NO" class="java.lang.String"/>
+	<field name="SEQ_NO" class="java.math.BigDecimal"/>
+	<field name="LOANCOLLTYPE_CODE" class="java.lang.String"/>
+	<field name="REFCOOP_ID" class="java.lang.String"/>
+	<field name="REF_COLLNO" class="java.lang.String"/>
+	<field name="DESCRIPTION" class="java.lang.String"/>
+	<field name="COLLBASE_AMT" class="java.math.BigDecimal"/>
+	<field name="COLLBASE_PERCENT" class="java.math.BigDecimal"/>
+	<field name="COLLUSED_AMT" class="java.math.BigDecimal"/>
+	<field name="COLLBALANCE_AMT" class="java.math.BigDecimal"/>
+	<field name="COLLMAX_AMT" class="java.math.BigDecimal"/>
+	<field name="COLLACTIVE_AMT" class="java.math.BigDecimal"/>
+	<field name="COLLACTIVE_PERCENT" class="java.math.BigDecimal"/>
+	<field name="COLLRETURNVAL_STATUS" class="java.math.BigDecimal"/>
+	<field name="COLL_STATUS" class="java.math.BigDecimal"/>
+	<field name="COLLRETURNVAL_FLAG" class="java.math.BigDecimal"/>
+	<field name="COLLFIXCONT_FLAG" class="java.math.BigDecimal"/>
+	<field name="COLLPERMISS_FLAG" class="java.math.BigDecimal"/>
+	<field name="COLLACTIVE_BALANCE" class="java.math.BigDecimal"/>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="d6f73d54-4765-455d-acc1-05b37d9b0520" x="0" y="0" width="111" height="20"/>
+				<box>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{REF_COLLNO} + " " + $F{DESCRIPTION}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement uuid="12e4b159-4308-428f-b089-32d019decf3e" x="111" y="0" width="76" height="20"/>
+				<box>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+					<paragraph rightIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COLLUSED_AMT}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

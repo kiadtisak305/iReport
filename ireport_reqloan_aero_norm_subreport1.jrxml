@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ireport_reqloan_aero_norm_subreport1" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="c92df25d-893d-44c4-867c-c00ddfc49df3">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="as_loanrequest_docno" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select a.moneytype_code, b.moneytype_desc, a.expense_bank, a.expense_accid, a.expense_amt, c.bank_shortname_t, c.bank_desc,a.chueqe_name
+from lnreqloanpayoutexpense a
+left join cmucfmoneytype b on a.moneytype_code = b.moneytype_code
+left join cmucfbank c on a.expense_bank = c.bank_code
+where loanrequest_docno  = $P{as_loanrequest_docno}  order by a.seq_no asc]]>
+	</queryString>
+	<field name="MONEYTYPE_CODE" class="java.lang.String"/>
+	<field name="MONEYTYPE_DESC" class="java.lang.String"/>
+	<field name="EXPENSE_BANK" class="java.lang.String"/>
+	<field name="EXPENSE_ACCID" class="java.lang.String"/>
+	<field name="EXPENSE_AMT" class="java.math.BigDecimal"/>
+	<field name="BANK_SHORTNAME_T" class="java.lang.String"/>
+	<field name="BANK_DESC" class="java.lang.String"/>
+	<field name="CHUEQE_NAME" class="java.lang.String"/>
+	<detail>
+		<band height="19" splitType="Stretch">
+			<textField>
+				<reportElement uuid="b0b30703-e5de-45af-aedc-b344a96f9e2f" x="0" y="0" width="34" height="18"/>
+				<textElement>
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{MONEYTYPE_CODE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="9c934175-3269-468c-aaa9-541d82c57792" x="34" y="0" width="61" height="18"/>
+				<textElement>
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{MONEYTYPE_DESC}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="3b6b99b1-760b-44f5-8008-71ebe32ff616" x="95" y="1" width="168" height="18"/>
+				<textElement>
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{MONEYTYPE_CODE}=="CHQ" ||$F{MONEYTYPE_CODE}=="MRT" ?$F{CHUEQE_NAME}:$F{BANK_SHORTNAME_T} + " บัญชี " +$F{EXPENSE_ACCID}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement uuid="749a0f27-ded3-4180-b69c-d84b060fb4ce" x="263" y="0" width="65" height="18"/>
+				<textElement textAlignment="Right">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{EXPENSE_AMT}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

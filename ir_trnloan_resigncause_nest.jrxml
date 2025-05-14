@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ir_trnloan_resigncause_nest" language="groovy" pageWidth="300" pageHeight="200" columnWidth="300" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="c43989a3-ca5a-4167-9224-e03e7a7f122d">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="as_membno" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select rs.member_no,rs.pass_comitee,rc.resigncause_desc
+from mbreqresign rs
+join mbucfresigncause rc on rs.resigncause_code = rc.resigncause_code
+where rs.member_no = $P{as_membno}]]>
+	</queryString>
+	<field name="MEMBER_NO" class="java.lang.String"/>
+	<field name="PASS_COMITEE" class="java.lang.String"/>
+	<field name="RESIGNCAUSE_DESC" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="41" splitType="Stretch">
+			<textField>
+				<reportElement uuid="4550b344-ea42-4c39-a2f9-125cf0952ee0" x="0" y="1" width="300" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA["สาเหตุ : "+($F{RESIGNCAUSE_DESC}==null?"":$F{RESIGNCAUSE_DESC})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="fc97eb97-76a6-4811-9f1a-5c7335d89ce7" x="0" y="21" width="300" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA["มติที่ประชุม : "+($F{PASS_COMITEE}==null?"":$F{PASS_COMITEE})]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

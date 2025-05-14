@@ -1,0 +1,744 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="r_sl_shrlonbal_day_member_hau" language="groovy" pageWidth="1090" pageHeight="720" orientation="Landscape" columnWidth="1050" leftMargin="20" rightMargin="20" topMargin="0" bottomMargin="0" isSummaryNewPage="true" uuid="c3a7bd99-4b8e-4839-88c6-b0ab436c522c">
+	<property name="ireport.zoom" value="1.0000000000000064"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["C:\\iReportสุพรรณบุรี\\Loan\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="as_coopid" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="as_smembgroup" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="as_emembgroup" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="as_recvperiod" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+    t.coop_id,
+    (SELECT coop_name FROM cmcoopconstant) AS coop_name,
+    t.count,
+    t.count_dead,
+    t.full_name,
+    t.member_no,
+    t.membgroup_code,
+    t.membgroup_desc,
+    SUM(t.shrlastperiodpay_amt) AS shrlastperiodpay_amt,
+    SUM(t.shrperiodpay_value) AS shrperiodpay_value,
+    SUM(t.shrbalance_value) AS sharestk_amt,
+    SUM(t.sum_lon) AS sum_lon,
+    SUM(t.sum_lon01) AS sum_lon01,
+    SUM(t.sum_lon02) AS sum_lon02,
+    SUM(t.sum_lon03) AS sum_lon03,
+    NVL(accum.stm_accum, 0) AS STM_ACCUM
+FROM (
+    SELECT
+        sl.coop_id,
+        COUNT(DISTINCT sl.member_no) AS count,
+        SUM(DISTINCT CASE WHEN mb.dead_status = 1 THEN 1 ELSE 0 END) AS count_dead,
+        ft_getmemname(sl.coop_id, sl.member_no) AS full_name,
+        sl.member_no,
+        sl.membgroup_code,
+        mg.membgroup_desc,
+        CASE WHEN sl.bizz_system = 'SHR' THEN SUM(sl.lastperiodpay_amt) ELSE 0 END AS shrlastperiodpay_amt,
+        CASE WHEN sl.bizz_system = 'SHR' THEN SUM(sl.periodpay_value) ELSE 0 END AS shrperiodpay_value,
+        CASE WHEN sl.bizz_system = 'SHR' THEN SUM(sl.balance_value) ELSE 0 END AS shrbalance_value,
+        CASE WHEN sl.bizz_system = 'LON' AND lt.loangroup_code = '01' THEN SUM(sl.balance_value) ELSE 0 END AS sum_lon01,
+        CASE WHEN sl.bizz_system = 'LON' AND lt.loangroup_code = '02' THEN SUM(sl.balance_value) ELSE 0 END AS sum_lon02,
+        CASE WHEN sl.bizz_system = 'LON' AND lt.loangroup_code = '03' THEN SUM(sl.balance_value) ELSE 0 END AS sum_lon03,
+        CASE WHEN sl.bizz_system = 'LON' THEN SUM(sl.balance_value) ELSE 0 END AS sum_lon
+    FROM slclsmthbalance sl
+    LEFT JOIN mbmembmaster mb ON mb.member_no = sl.member_no
+    LEFT JOIN mbucfmembgroup mg ON sl.membgroup_code = mg.membgroup_code
+    LEFT JOIN lnloantype lt ON sl.bizztype_code = lt.loantype_code
+    WHERE sl.clsmth_period = $P{as_recvperiod}
+      AND sl.member_no NOT IN ('00002866', '00002865', '00002867')
+    GROUP BY sl.coop_id, sl.member_no, sl.membgroup_code, mg.membgroup_desc, sl.bizz_system, lt.loangroup_code
+) t
+LEFT JOIN (
+    SELECT
+        mb3.member_no,
+        SUM(
+            CASE WHEN lns3.loanitemtype_code NOT IN ('LRT') THEN (-1) * (lns3.interest_payment * lnu3.sign_flag)
+                 WHEN lns3.loanitemtype_code = 'LRT' THEN -(lns3.interest_payment * lnu3.sign_flag)
+                 ELSE 0
+            END
+        ) AS stm_accum
+    FROM mbmembmaster mb3
+    LEFT JOIN lncontmaster ln3 ON ln3.member_no = mb3.member_no
+    LEFT JOIN lncontstatement lns3 ON ln3.loancontract_no = lns3.loancontract_no
+    LEFT JOIN lnucfloanitemtype lnu3 ON lns3.loanitemtype_code = lnu3.loanitemtype_code
+    WHERE  lns3.slip_date between
+(select accstart_date from cmaccountyear where account_year = case
+when sysdate >= to_date('01/10/' || extract(year from sysdate), 'dd/mm/yyyy')
+then extract(year from sysdate) + 544 else extract(year from sysdate) + 543 end)
+and LAST_DAY(TO_DATE('01/' || SUBSTR($P{as_recvperiod}, 5, 2) || '/' || (TO_NUMBER(SUBSTR($P{as_recvperiod}, 1, 4)) - 543), 'DD/MM/YYYY'))
+
+      and (mb3.resign_status = 0 or (mb3.resign_status = 1 and mb3.resign_date >= LAST_DAY(TO_DATE('01/' || SUBSTR($P{as_recvperiod}, 5, 2) || '/' || (TO_NUMBER(SUBSTR($P{as_recvperiod}, 1, 4)) - 543), 'DD/MM/YYYY'))))
+    group by mb3.member_no
+order by mb3.member_no
+) accum ON accum.member_no = t.member_no
+GROUP BY t.coop_id, t.count, t.count_dead, t.full_name, t.member_no, t.membgroup_code, t.membgroup_desc, accum.stm_accum
+ORDER BY t.member_no]]>
+	</queryString>
+	<field name="COOP_ID" class="java.lang.String"/>
+	<field name="COOP_NAME" class="java.lang.String"/>
+	<field name="COUNT" class="java.math.BigDecimal"/>
+	<field name="COUNT_DEAD" class="java.math.BigDecimal"/>
+	<field name="FULL_NAME" class="java.lang.String"/>
+	<field name="MEMBER_NO" class="java.lang.String"/>
+	<field name="MEMBGROUP_CODE" class="java.lang.String"/>
+	<field name="MEMBGROUP_DESC" class="java.lang.String"/>
+	<field name="SHRLASTPERIODPAY_AMT" class="java.math.BigDecimal"/>
+	<field name="SHRPERIODPAY_VALUE" class="java.math.BigDecimal"/>
+	<field name="SHARESTK_AMT" class="java.math.BigDecimal"/>
+	<field name="SUM_LON" class="java.math.BigDecimal"/>
+	<field name="SUM_LON01" class="java.math.BigDecimal"/>
+	<field name="SUM_LON02" class="java.math.BigDecimal"/>
+	<field name="SUM_LON03" class="java.math.BigDecimal"/>
+	<field name="STM_ACCUM" class="java.math.BigDecimal"/>
+	<sortField name="MEMBGROUP_CODE"/>
+	<sortField name="MEMBER_NO"/>
+	<variable name="membgroup_code" class="java.lang.String" resetType="Group" resetGroup="MEMBGROUP_CODE" calculation="Count">
+		<variableExpression><![CDATA[$F{MEMBGROUP_CODE}]]></variableExpression>
+	</variable>
+	<variable name="count" class="java.math.BigDecimal" resetType="Group" resetGroup="MEMBGROUP_CODE" calculation="Sum">
+		<variableExpression><![CDATA[$F{COUNT} - ($F{COUNT_DEAD})]]></variableExpression>
+	</variable>
+	<variable name="sumshr" class="java.math.BigDecimal" resetType="Group" resetGroup="MEMBGROUP_CODE" calculation="Sum">
+		<variableExpression><![CDATA[$F{SHARESTK_AMT}]]></variableExpression>
+	</variable>
+	<variable name="sumprincipal30" class="java.math.BigDecimal" resetType="Group" resetGroup="MEMBGROUP_CODE" calculation="Sum">
+		<variableExpression><![CDATA[$F{SUM_LON03}]]></variableExpression>
+	</variable>
+	<variable name="sumprincipal20" class="java.math.BigDecimal" resetType="Group" resetGroup="MEMBGROUP_CODE" calculation="Sum">
+		<variableExpression><![CDATA[$F{SUM_LON02}]]></variableExpression>
+	</variable>
+	<variable name="sumprincipal10" class="java.math.BigDecimal" resetType="Group" resetGroup="MEMBGROUP_CODE" calculation="Sum">
+		<variableExpression><![CDATA[$F{SUM_LON01}]]></variableExpression>
+	</variable>
+	<variable name="sumprincipal_all" class="java.math.BigDecimal" resetType="Column" calculation="Sum">
+		<variableExpression><![CDATA[$F{SUM_LON01}+$F{SUM_LON02}+$F{SUM_LON03}]]></variableExpression>
+	</variable>
+	<variable name="count_all" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{COUNT} - ($F{COUNT_DEAD})]]></variableExpression>
+	</variable>
+	<variable name="sumshr_all" class="java.math.BigDecimal" resetType="Group" resetGroup="Footer" calculation="Sum">
+		<variableExpression><![CDATA[$F{SHARESTK_AMT}]]></variableExpression>
+	</variable>
+	<variable name="sumprincipal10_all" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{SUM_LON01}]]></variableExpression>
+	</variable>
+	<variable name="sumprincipal20_all" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{SUM_LON02}]]></variableExpression>
+	</variable>
+	<variable name="sumprincipal30_all" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{SUM_LON03}]]></variableExpression>
+	</variable>
+	<variable name="sumloan_grp" class="java.math.BigDecimal" resetType="Group" resetGroup="MEMBGROUP_CODE" calculation="Sum">
+		<variableExpression><![CDATA[$F{SUM_LON01} + $F{SUM_LON02} + $F{SUM_LON03}]]></variableExpression>
+	</variable>
+	<variable name="sumloan_all" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{SUM_LON01} + $F{SUM_LON02} + $F{SUM_LON03}]]></variableExpression>
+	</variable>
+	<variable name="summmmm" class="java.math.BigDecimal" resetType="Group" resetGroup="MEMBER_NO" calculation="Sum">
+		<variableExpression><![CDATA[$F{SUM_LON}]]></variableExpression>
+	</variable>
+	<variable name="sum_ACCUM_INTEREST_all" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{STM_ACCUM}]]></variableExpression>
+	</variable>
+	<variable name="sum_ACCUM_INTEREST_grp" class="java.math.BigDecimal" resetType="Group" resetGroup="MEMBGROUP_CODE" calculation="Sum">
+		<variableExpression><![CDATA[$F{STM_ACCUM}]]></variableExpression>
+	</variable>
+	<variable name="sum_ACCUM_INTEREST_grp_stm" class="java.math.BigDecimal" resetType="Group" resetGroup="MEMBGROUP_CODE" calculation="Sum">
+		<variableExpression><![CDATA[$F{STM_ACCUM}]]></variableExpression>
+	</variable>
+	<variable name="sum_ACCUM_INTEREST_all_stm" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{STM_ACCUM}]]></variableExpression>
+	</variable>
+	<group name="Footer">
+		<groupFooter>
+			<band height="20">
+				<staticText>
+					<reportElement uuid="6a8af830-7cc3-4e01-8220-8e6fcd16ab13" x="0" y="0" width="67" height="20"/>
+					<textElement>
+						<font fontName="Angsana New" size="14"/>
+					</textElement>
+					<text><![CDATA[รวมทั้งหมด :]]></text>
+				</staticText>
+				<textField pattern="#,##0">
+					<reportElement uuid="2cd33c55-d837-444c-8fc9-2fdcd4773551" x="115" y="0" width="100" height="20"/>
+					<textElement>
+						<font fontName="Angsana New" size="14"/>
+					</textElement>
+					<textFieldExpression><![CDATA[($V{count_all})+" ราย"]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement uuid="8559c51f-e326-4d77-aea2-da2bb31b0f03" x="226" y="0" width="115" height="20"/>
+					<textElement textAlignment="Right">
+						<font fontName="Angsana New" size="14"/>
+						<paragraph rightIndent="15"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{sumshr_all}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement uuid="cc90d3a3-d9a2-4c97-a928-00697a9a6501" x="431" y="0" width="100" height="20"/>
+					<textElement textAlignment="Right">
+						<font fontName="Angsana New" size="14"/>
+					</textElement>
+					<textFieldExpression><![CDATA[($V{sumprincipal10_all}== 0 ? null :$V{sumprincipal10_all})]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement uuid="92a5d196-f217-4ce8-b9af-b5e4276d772d" x="621" y="0" width="100" height="20"/>
+					<textElement textAlignment="Right">
+						<font fontName="Angsana New" size="14"/>
+					</textElement>
+					<textFieldExpression><![CDATA[($V{sumprincipal20_all}== 0 ? null :$V{sumprincipal20_all})]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement uuid="0489c71d-2698-4be1-8dd7-dc4229e22cca" x="771" y="0" width="140" height="20"/>
+					<textElement textAlignment="Right">
+						<font fontName="Angsana New" size="14"/>
+					</textElement>
+					<textFieldExpression><![CDATA[($V{sumprincipal30_all}== 0 ? null :$V{sumprincipal30_all})]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement uuid="0e5fe9e1-a25c-4f1d-af53-2b838f2bd74f" x="911" y="0" width="80" height="20"/>
+					<textElement textAlignment="Right">
+						<font fontName="Angsana New" size="14"/>
+						<paragraph leftIndent="1"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{sumloan_all}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement uuid="be6c4ff7-1aa7-4d99-b4b0-b24f511c993e" x="991" y="0" width="59" height="20"/>
+					<textElement textAlignment="Right">
+						<font fontName="Angsana New" size="14"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{sum_ACCUM_INTEREST_all_stm}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="MEMBGROUP_CODE" keepTogether="true">
+		<groupExpression><![CDATA[$F{MEMBGROUP_CODE}]]></groupExpression>
+		<groupHeader>
+			<band height="21">
+				<textField>
+					<reportElement uuid="6748d724-59e1-4532-ace7-904b13f9d02d" x="0" y="0" width="226" height="20"/>
+					<textElement>
+						<font fontName="Angsana New" size="14"/>
+					</textElement>
+					<textFieldExpression><![CDATA["หน่วย  " + $F{MEMBGROUP_CODE} + " - " + $F{MEMBGROUP_DESC}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="21">
+				<textField>
+					<reportElement uuid="3027f290-c509-45ec-b350-5d2d4072cec5" x="0" y="0" width="286" height="20"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Angsana New" size="14"/>
+					</textElement>
+					<textFieldExpression><![CDATA["หน่วย  " + $F{MEMBGROUP_CODE} + " - " + $F{MEMBGROUP_DESC} +" รวมทั้งหมด " +$V{count} + "  ราย"]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement uuid="10844ca8-faaa-4a9f-be4e-8456044e9262" x="254" y="0" width="87" height="20"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Angsana New" size="14"/>
+						<paragraph rightIndent="15"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{sumshr}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement uuid="7b00a44f-a824-4090-bb2e-2776de11e0d2" x="0" y="19" width="1050" height="1"/>
+					<graphicElement>
+						<pen lineStyle="Dashed"/>
+					</graphicElement>
+				</line>
+				<textField pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement uuid="61568c6c-6471-4878-81e0-d038530aea32" x="431" y="0" width="100" height="19"/>
+					<textElement textAlignment="Right">
+						<font fontName="Angsana New" size="14"/>
+					</textElement>
+					<textFieldExpression><![CDATA[($V{sumprincipal10}== 0 ? null :$V{sumprincipal10})]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement uuid="43c20e1d-a3df-42a6-b6a2-4ee5aafd48e2" x="621" y="0" width="100" height="19"/>
+					<textElement textAlignment="Right">
+						<font fontName="Angsana New" size="14"/>
+					</textElement>
+					<textFieldExpression><![CDATA[($V{sumprincipal20}== 0 ? null :$V{sumprincipal20})]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement uuid="9b3b6528-827c-41d1-b4ab-cf864a122a3a" x="771" y="0" width="140" height="19"/>
+					<textElement textAlignment="Right">
+						<font fontName="Angsana New" size="14"/>
+					</textElement>
+					<textFieldExpression><![CDATA[($V{sumprincipal30}== 0 ? null :$V{sumprincipal30})]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement uuid="21ba1914-48a4-4ab9-9877-39a61f5f6486" x="911" y="0" width="80" height="19"/>
+					<textElement textAlignment="Right">
+						<font fontName="Angsana New" size="14"/>
+						<paragraph leftIndent="1"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{sumloan_grp}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement uuid="425cc756-9479-419e-80d7-4efc5d8d3abf" x="991" y="0" width="59" height="19"/>
+					<textElement textAlignment="Right">
+						<font fontName="Angsana New" size="14"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{sum_ACCUM_INTEREST_grp_stm}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="MEMBER_NO">
+		<groupExpression><![CDATA[$F{MEMBER_NO}]]></groupExpression>
+		<groupHeader>
+			<band/>
+		</groupHeader>
+		<groupFooter>
+			<band/>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="101" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="f874e987-af9b-43f7-8cd6-eeed4e87c199" x="32" y="81" width="53" height="20"/>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<text><![CDATA[เลขสมาชิก]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="839fb8a4-a01a-4beb-912f-9a8532745399" x="85" y="81" width="115" height="20"/>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<text><![CDATA[ชื่อ - สกุล]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="924325e0-37a4-468b-b5e2-1ababfe1c359" x="200" y="81" width="26" height="20"/>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<text><![CDATA[งวด]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="d5dfd962-b489-4c2f-9463-ed5c0af2a070" x="226" y="81" width="60" height="20"/>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<text><![CDATA[ห/ด]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="783e4d4e-7c02-4b65-afed-29d05278562f" x="286" y="81" width="55" height="20"/>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Angsana New" size="14"/>
+					<paragraph rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[ทุนเรือนหุ้น]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="4cc1231e-57ad-461b-b81e-110dbc769862" x="160" y="61" width="181" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<text><![CDATA[หุ้น]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b642e538-d269-4263-9420-345d92414285" x="341" y="81" width="50" height="20"/>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<text><![CDATA[เลข สญ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="c1f79193-299b-464c-86b7-08a334e97688" x="391" y="81" width="40" height="20"/>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<text><![CDATA[งวด]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="5bb7192e-6bb9-424f-aa1b-27d5b9182542" x="431" y="81" width="50" height="20"/>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<text><![CDATA[ค่างวด]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="4029c8ba-2833-467d-9ff1-48f4d69dea34" x="481" y="81" width="50" height="20"/>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<text><![CDATA[คงเหลือ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="25ee94bd-3608-4144-9d74-3cf6354f29bb" x="531" y="81" width="50" height="20"/>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<text><![CDATA[เลข สญ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="234ec81f-b528-4bb0-a620-6673bdb5b1a7" x="581" y="81" width="40" height="20"/>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<text><![CDATA[งวด]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="75fdbc0d-d016-4efd-8c5a-9e16ce9fae68" x="621" y="81" width="50" height="20"/>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<text><![CDATA[ค่างวด]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="26021251-d629-4617-a404-86ec34b90b09" x="671" y="81" width="50" height="20"/>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<text><![CDATA[คงเหลือ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="32d63309-0847-4975-bbc2-329521c414c5" x="341" y="61" width="190" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<text><![CDATA[เงินกู้ฉุกเฉิน]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="201a4577-9bc4-41a7-85f8-bda2d571e3fd" x="531" y="61" width="190" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<text><![CDATA[เงินกู้สามัญ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="e1fd221b-e21f-4b2e-831c-799e039471dd" x="771" y="81" width="40" height="20"/>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<text><![CDATA[งวด]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="e8f09231-9cc5-4d1b-a908-31f55877adf1" x="811" y="81" width="50" height="20"/>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<text><![CDATA[ค่างวด]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="49a9b013-262d-4a89-8b2b-2e0dc154406f" x="861" y="81" width="50" height="20"/>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<text><![CDATA[คงเหลือ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="9583aff4-951b-4dd2-9aad-1146045dc681" x="721" y="61" width="190" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<text><![CDATA[เงินกู้พิเศษ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="0055dcf3-5f10-49d2-96ae-fe5cff530a19" x="721" y="81" width="50" height="20"/>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<text><![CDATA[เลข สญ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="92b3b766-21e3-431f-ab7f-c5b94260c118" x="0" y="81" width="32" height="20"/>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<text><![CDATA[ลำดับที่]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="d40749e1-d73b-4066-b8af-fa7ca0181b36" x="255" y="19" width="449" height="20"/>
+				<textElement textAlignment="Center">
+					<font fontName="Angsana New" size="16"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COOP_NAME}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="87fef789-cee2-4e5f-8fe8-3eaf52f43863" x="894" y="0" width="113" height="20"/>
+				<textElement textAlignment="Right">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA["หน้าที่ : "+$V{PAGE_NUMBER}+"/"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement uuid="4d081971-ccea-480a-b001-101547910632" x="1007" y="0" width="43" height="20"/>
+				<textElement textAlignment="Left">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="0bef5f24-2d59-4607-9401-5e525fa4094d" x="894" y="20" width="156" height="20"/>
+				<textElement textAlignment="Right">
+					<font fontName="Angsana New" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["ณ วันที่ : "+new SimpleDateFormat("dd/MM/yyyy",new Locale("th","TH")).format(new Date())]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="7286085c-5af3-4c6a-b3be-78a5e7f0f0a1" x="911" y="61" width="80" height="40"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<text><![CDATA[รวม]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement uuid="60df5265-4011-4cf1-baa0-37fb02d49ad4" x="204" y="39" width="550" height="20"/>
+				<textElement textAlignment="Center">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA["รายงานสรุปยอดหุ้นหนี้คงเหลือประจำงวดที่ " + $P{as_recvperiod}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="a3d307d0-11b8-46e0-b484-cf8e0c66a06e" x="991" y="61" width="59" height="40"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<text><![CDATA[ด/บ สะสม]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="d688f758-8691-4cf5-9cbe-4f86930c8861" x="0" y="61" width="160" height="20"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement uuid="4ef4c3cd-7b02-4ec1-b8e4-fe00f3cd75e7" x="32" y="0" width="53" height="20"/>
+				<textElement textAlignment="Center">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{MEMBER_NO}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="e63e656a-6118-434b-a7c6-be14b34e1f21" stretchType="RelativeToBandHeight" x="85" y="0" width="115" height="20"/>
+				<textElement>
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{FULL_NAME}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="b7dd7615-032e-458e-af47-cb9581e3e131" x="200" y="0" width="26" height="20"/>
+				<textElement textAlignment="Center">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SHRLASTPERIODPAY_AMT}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement uuid="523fe53b-1195-48d3-aa4b-6e26cdfb4931" x="226" y="0" width="60" height="20"/>
+				<textElement textAlignment="Center">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SHRPERIODPAY_VALUE}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement uuid="d72e801e-e1d5-4327-8690-d64fa2da436e" x="286" y="0" width="55" height="20"/>
+				<textElement textAlignment="Right">
+					<font fontName="Angsana New" size="14"/>
+					<paragraph rightIndent="15"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SHARESTK_AMT}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="5ce69b09-7023-4e36-83a8-46818f7d7a6d" x="0" y="0" width="32" height="20"/>
+				<textElement textAlignment="Center">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{count}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement uuid="67ceca09-9cf9-4be4-95e8-6cbc895cff8a" x="911" y="0" width="80" height="20"/>
+				<textElement textAlignment="Right">
+					<font fontName="Angsana New" size="14"/>
+					<paragraph leftIndent="1"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{summmmm}]]></textFieldExpression>
+			</textField>
+			<subreport>
+				<reportElement uuid="b3abad67-e25d-4aa2-bd23-6b8587af4d03" x="341" y="0" width="190" height="20"/>
+				<subreportParameter name="as_coopid">
+					<subreportParameterExpression><![CDATA[$F{COOP_ID}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="as_period">
+					<subreportParameterExpression><![CDATA[$P{as_recvperiod}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="as_memberno">
+					<subreportParameterExpression><![CDATA[$F{MEMBER_NO}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["sub_jimmy01.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement uuid="c81abde5-7ac3-436d-8ad0-278fa6e74a00" x="531" y="0" width="190" height="20"/>
+				<subreportParameter name="as_coopid">
+					<subreportParameterExpression><![CDATA[$F{COOP_ID}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="as_period">
+					<subreportParameterExpression><![CDATA[$P{as_recvperiod}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="as_memberno">
+					<subreportParameterExpression><![CDATA[$F{MEMBER_NO}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["sub_jimmy02.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement uuid="fd01018f-1692-4bc5-86ed-1d1a22a39570" x="721" y="0" width="190" height="20"/>
+				<subreportParameter name="as_coopid">
+					<subreportParameterExpression><![CDATA[$F{COOP_ID}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="as_period">
+					<subreportParameterExpression><![CDATA[$P{as_recvperiod}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="as_memberno">
+					<subreportParameterExpression><![CDATA[$F{MEMBER_NO}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["sub_jimmy03.jasper"]]></subreportExpression>
+			</subreport>
+			<textField pattern="#,##0.00">
+				<reportElement uuid="5b7850cf-49ea-4f89-b466-dffd1c8a133c" x="991" y="0" width="59" height="20"/>
+				<textElement textAlignment="Right">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{STM_ACCUM}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="31">
+			<line>
+				<reportElement uuid="8dcd3ce8-0e06-4cc0-966b-7c79f7584903" x="0" y="0" width="1050" height="1"/>
+				<graphicElement>
+					<pen lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<subreport>
+				<reportElement uuid="a9a29fc9-8eb2-4432-9975-fe4b07e0e265" x="0" y="0" width="200" height="31"/>
+				<subreportParameter name="as_coopid">
+					<subreportParameterExpression><![CDATA[$F{COOP_ID}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="end_group">
+					<subreportParameterExpression><![CDATA[$P{as_emembgroup}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="as_period">
+					<subreportParameterExpression><![CDATA[$P{as_recvperiod}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="start_group">
+					<subreportParameterExpression><![CDATA[$P{as_smembgroup}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["sub_jimmy_sumbal.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</summary>
+</jasperReport>

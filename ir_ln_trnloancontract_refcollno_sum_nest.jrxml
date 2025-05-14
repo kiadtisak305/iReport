@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ir_ln_trnloancontract_refcollno_sum_nest" language="groovy" pageWidth="425" pageHeight="142" columnWidth="425" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="15cae678-754d-4393-9fad-a5bc7506c678">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="date1" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="date2" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+      count(distinct ltd.trn_memno) as cntmbno,
+         count(distinct ltd.trn_contractno) as cntloan,
+         sum(ltd.trnprnbal_amt) as sumprncbal,
+         sum(ltd.periodpayprn_amt) as sumpaypr
+    FROM LNREQTRNLNRESPONSDET ltd
+join LNREQTRNLNRESPONS lt on ltd.trnlnreq_docno = lt.trnlnreq_docno
+left join LNCONTMASTER lm on lm.coop_id = lm.coop_id and lm.loancontract_no = substr(ltd.trn_contractno,0,10)
+join MBMEMBMASTER mb on mb.coop_id = ltd.coop_id and mb.member_no = ltd.trn_memno
+join MBUCFMEMBGROUP mg on mb.coop_id = mg.coop_id and mb.membgroup_code = mg.membgroup_code
+where lt.trnlnreq_date between $P{date1} and $P{date2}]]>
+	</queryString>
+	<field name="CNTMBNO" class="java.math.BigDecimal"/>
+	<field name="CNTLOAN" class="java.math.BigDecimal"/>
+	<field name="SUMPRNCBAL" class="java.math.BigDecimal"/>
+	<field name="SUMPAYPR" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="21" splitType="Stretch">
+			<textField>
+				<reportElement uuid="70811da9-6d98-451d-bb68-72502a647544" x="0" y="0" width="73" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CNTLOAN}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="4aa0e7fa-fdc2-493b-831c-556abb3606c4" x="73" y="0" width="73" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CNTMBNO}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement uuid="b7708185-0349-408e-a57a-028cb78474a0" x="226" y="0" width="73" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SUMPRNCBAL}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement uuid="6a7770d3-67d4-4189-ac89-14e5fd5ca4db" x="351" y="0" width="73" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SUMPAYPR}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

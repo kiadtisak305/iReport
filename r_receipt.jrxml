@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="r_receipt" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="0e1ca2f9-30d4-46f8-956a-bca5da416543">
+	<property name="ireport.zoom" value="2.1961500000000007"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["C:\\GCOOP_ALL\\HAU\\GCOOP\\iReport\\Reports\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="as_coopid" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="as_slipno" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="list_slip" class="java.util.List">
+		<defaultValueExpression><![CDATA[$P{as_slipno}.split( ',' )]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select
+sl.coop_id,
+sl.PAYINSLIP_NO,
+cm.coop_name,
+sl.document_no,
+sl.slip_date,
+FT_GETMEMNAME (mb.coop_id, mb.member_no) as fullname,
+sl.sharestk_value,
+mb.member_no,
+mu.membgroup_code,
+mu.membgroup_desc,
+mb.accum_interest as intaccum_amt,
+FT_READTBAHT(sl.slip_amt) AS slip_amt_th,
+sl.slip_amt
+from slslippayin sl , mbmembmaster mb, mbucfmembgroup mu, cmcoopconstant cm
+where sl.coop_id = $P{as_coopid}
+and $X{IN, ltrim(rtrim(sl.payinslip_no)) , list_slip}
+and sl.member_no = mb.member_no
+and mu.membgroup_code = mb.membgroup_code
+and sl.coop_id = cm.coop_id]]>
+	</queryString>
+	<field name="COOP_ID" class="java.lang.String"/>
+	<field name="PAYINSLIP_NO" class="java.lang.String"/>
+	<field name="COOP_NAME" class="java.lang.String"/>
+	<field name="DOCUMENT_NO" class="java.lang.String"/>
+	<field name="SLIP_DATE" class="java.sql.Timestamp"/>
+	<field name="FULLNAME" class="java.lang.String"/>
+	<field name="SHARESTK_VALUE" class="java.math.BigDecimal"/>
+	<field name="MEMBER_NO" class="java.lang.String"/>
+	<field name="MEMBGROUP_CODE" class="java.lang.String"/>
+	<field name="MEMBGROUP_DESC" class="java.lang.String"/>
+	<field name="INTACCUM_AMT" class="java.math.BigDecimal"/>
+	<field name="SLIP_AMT_TH" class="java.lang.String"/>
+	<field name="SLIP_AMT" class="java.math.BigDecimal"/>
+	<group name="slip_no" isStartNewPage="true" keepTogether="true">
+		<groupExpression><![CDATA[$F{PAYINSLIP_NO}]]></groupExpression>
+	</group>
+	<detail>
+		<band height="312" splitType="Stretch">
+			<subreport>
+				<reportElement uuid="2c64475b-e86d-43f3-bb47-8885b36cfe7e" x="0" y="120" width="356" height="110"/>
+				<subreportParameter name="as_slipno">
+					<subreportParameterExpression><![CDATA[$F{PAYINSLIP_NO}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="as_coopid">
+					<subreportParameterExpression><![CDATA[$F{COOP_ID}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["r_receipt_sub.jasper"]]></subreportExpression>
+			</subreport>
+			<textField pattern="#,##0.00">
+				<reportElement uuid="c826a826-524e-4094-8af9-4f79e8560b0e" x="186" y="287" width="91" height="19"/>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="15"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SLIP_AMT}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="3fd7a151-422e-407c-8162-a4a206707b90" x="0" y="287" width="217" height="19"/>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="13"/>
+				</textElement>
+				<textFieldExpression><![CDATA["(" + $F{SLIP_AMT_TH} + ")"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="96edcf9b-6e52-4e5a-b860-a73de80907da" x="64" y="40" width="169" height="20"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Angsana New" size="15"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{FULLNAME}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement uuid="52681210-87b9-4e2e-a989-04a36b865fa4" x="256" y="68" width="85" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font fontName="Angsana New" size="15"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{INTACCUM_AMT}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement uuid="5f27f74e-1f13-4eb4-b719-97321b3f0b93" x="256" y="40" width="85" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font fontName="Angsana New" size="15"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SHARESTK_VALUE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="2147b626-bc35-4009-b23c-35eaa44f9b92" x="140" y="68" width="131" height="20"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Angsana New" size="15"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{MEMBGROUP_CODE} + " - " + $F{MEMBGROUP_DESC}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="7ef2a708-2394-4304-a13a-e8f686ac32f0" x="64" y="11" width="100" height="20"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Angsana New" size="15"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DOCUMENT_NO}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement uuid="cb13cfb4-7cd7-40d6-9d83-82eb36d03427" x="233" y="11" width="85" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font fontName="Angsana New" size="15"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SLIP_DATE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="97e1e103-663a-4a63-a2a0-765025df039e" x="64" y="68" width="47" height="20"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Angsana New" size="15"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{MEMBER_NO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>
