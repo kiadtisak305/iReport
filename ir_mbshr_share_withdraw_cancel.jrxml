@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ir_mbshr_withdraw_cancel" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="812" leftMargin="20" rightMargin="10" topMargin="20" bottomMargin="20" uuid="11b63495-83aa-4d7c-80cc-2f6e167bce36">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ir_mbshr_withdraw_cancel" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="NoDataSection" columnWidth="812" leftMargin="20" rightMargin="10" topMargin="20" bottomMargin="20" uuid="11b63495-83aa-4d7c-80cc-2f6e167bce36">
 	<property name="ireport.zoom" value="2.1435888100000056"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.x" value="142"/>
 	<property name="ireport.y" value="0"/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="GCOOP"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
@@ -16,7 +16,7 @@
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT DISTINCT
-    CM.COOP_NAME,
+    (SELECT COOP_NAME FROM CMCOOPCONSTANT where coop_id = $P{as_coopid})AS COOP_NAME,
     SL.MEMBER_NO,
     SL.DOCUMENT_NO,
     SL.ENTRY_ID,
@@ -55,9 +55,9 @@ WHERE    ( SL.SLIPTYPE_CODE = 'SWD' ) AND
 	<field name="ENTRY_ID" class="java.lang.String"/>
 	<field name="BANKFEE_AMT" class="java.math.BigDecimal"/>
 	<field name="SLIP_DATE" class="java.sql.Timestamp"/>
+	<field name="SLIP_STATUS" class="java.math.BigDecimal"/>
 	<field name="OPERATE_DATE" class="java.sql.Timestamp"/>
 	<field name="PAYOUTNET_AMT" class="java.math.BigDecimal"/>
-	<field name="SLIP_STATUS" class="java.math.BigDecimal"/>
 	<field name="MEMBGROUP_DESC" class="java.lang.String"/>
 	<field name="SLIPTYPE_DESC" class="java.lang.String"/>
 	<field name="BANK_DESC" class="java.lang.String"/>
@@ -83,9 +83,6 @@ WHERE    ( SL.SLIPTYPE_CODE = 'SWD' ) AND
       ? java.math.BigDecimal.ZERO
       : $F{BANKFEE_AMT}]]></variableExpression>
 	</variable>
-	<background>
-		<band height="32" splitType="Stretch"/>
-	</background>
 	<pageHeader>
 		<band height="60">
 			<textField>
@@ -512,4 +509,15 @@ WHERE    ( SL.SLIPTYPE_CODE = 'SWD' ) AND
 			</textField>
 		</band>
 	</summary>
+	<noData>
+		<band height="32">
+			<staticText>
+				<reportElement uuid="b2d7176c-cde1-40e6-9129-e11daf7dc8d6" x="205" y="0" width="356" height="32"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Browallia New" size="16"/>
+				</textElement>
+				<text><![CDATA[ไม่พบข้อมูล]]></text>
+			</staticText>
+		</band>
+	</noData>
 </jasperReport>
