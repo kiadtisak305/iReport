@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ir_mbshr_register" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="644e7bb6-3951-4536-830b-e58f3971c689">
-	<property name="ireport.zoom" value="1.2100000000000006"/>
-	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.zoom" value="4.177248169415657"/>
+	<property name="ireport.x" value="2232"/>
+	<property name="ireport.y" value="31"/>
 	<parameter name="as_coopid" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
@@ -101,14 +101,14 @@ ORDER BY MBMEMBMASTER.MEMBGROUP_CODE,MBMEMBMASTER.MEMBER_NO]]>
 	<title>
 		<band height="60" splitType="Stretch">
 			<textField>
-				<reportElement uuid="7e9c1822-a748-4c0a-af57-b3ea6c83efe7" x="0" y="0" width="802" height="20"/>
+				<reportElement uuid="7e9c1822-a748-4c0a-af57-b3ea6c83efe7" x="145" y="0" width="502" height="20"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Angsana New" size="14" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{COOP_NAME}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement uuid="c5d7d100-0207-4c6b-b620-3a0dac2927b5" x="0" y="20" width="802" height="20"/>
+				<reportElement uuid="c5d7d100-0207-4c6b-b620-3a0dac2927b5" x="145" y="20" width="502" height="20"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Angsana New" size="14" isBold="true"/>
 				</textElement>
@@ -134,6 +134,34 @@ ORDER BY MBMEMBMASTER.MEMBGROUP_CODE,MBMEMBMASTER.MEMBER_NO]]>
 					<font fontName="Angsana New" size="14"/>
 				</textElement>
 				<textFieldExpression><![CDATA["ณ วันที่ "+new SimpleDateFormat("dd/MM/yyyy",new Locale("th","TH")).format(new java.util.Date())]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="21e06e1d-12e8-4dd0-af14-3cdf64412055" x="0" y="0" width="145" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["ระบบสมาชิกและหุ้น"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="943e9063-a7ac-4edb-b105-1748e7403abf" x="2" y="20" width="143" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["MBSH-DAY-100"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="90ffcec6-3afd-4441-86c5-62ead092697a" x="647" y="20" width="115" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["เวลาที่พิมพ์ : "]]></textFieldExpression>
+			</textField>
+			<textField pattern="HH:mm:ss">
+				<reportElement uuid="a5d13792-693b-4c89-934f-b076b629ce1d" x="762" y="20" width="39" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
