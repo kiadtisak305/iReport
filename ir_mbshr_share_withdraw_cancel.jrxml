@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 7.0.2.final using JasperReports Library version 5.1.0  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ir_mbshr_withdraw_cancel" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="812" leftMargin="20" rightMargin="10" topMargin="20" bottomMargin="20" uuid="11b63495-83aa-4d7c-80cc-2f6e167bce36">
-	<property name="ireport.zoom" value="1.4641000000000006"/>
-	<property name="ireport.x" value="221"/>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ir_mbshr_withdraw_cancel" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="812" leftMargin="20" rightMargin="10" topMargin="20" bottomMargin="20" uuid="11b63495-83aa-4d7c-80cc-2f6e167bce36">
+	<property name="ireport.zoom" value="2.1435888100000056"/>
+	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="GCOOP"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
@@ -16,7 +15,7 @@
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT DISTINCT 
+		<![CDATA[SELECT DISTINCT
     CM.COOP_NAME,
     SL.MEMBER_NO,
     SL.DOCUMENT_NO,
@@ -41,13 +40,13 @@ FROM SLSLIPPAYOUT    SL
 LEFT JOIN CMCOOPCONSTANT   CM  ON CM.COOP_ID         = SL.COOP_ID
 LEFT JOIN MBMEMBMASTER     MM  ON SL.MEMBER_NO       = MM.MEMBER_NO
 LEFT JOIN MBUCFPRENAME     PR  ON MM.PRENAME_CODE    = PR.PRENAME_CODE
-LEFT JOIN MBUCFMEMBGROUP   MG ON MM.MEMBGROUP_CODE   = MG.MEMBGROUP_CODE 
-LEFT JOIN SLUCFSLIPTYPE ST ON SL.SLIPTYPE_CODE = ST.SLIPTYPE_CODE 
+LEFT JOIN MBUCFMEMBGROUP   MG ON MM.MEMBGROUP_CODE   = MG.MEMBGROUP_CODE
+LEFT JOIN SLUCFSLIPTYPE ST ON SL.SLIPTYPE_CODE = ST.SLIPTYPE_CODE
 LEFT JOIN SLSLIPPAYOUTEXPENSE SLEX ON SLEX.PAYOUTSLIP_NO = SL.PAYOUTSLIP_NO
-LEFT JOIN CMUCFBANK CB ON CB.BANK_CODE = SLEX.EXPENSE_BANK 
+LEFT JOIN CMUCFBANK CB ON CB.BANK_CODE = SLEX.EXPENSE_BANK
 LEFT JOIN CMUCFBANKBRANCH CBB ON CBB.BRANCH_ID = SLEX.EXPENSE_BRANCH
-WHERE    ( SL.SLIPTYPE_CODE = 'SWD' ) AND   
-( SL.SLIP_STATUS < 1 ) AND 
+WHERE    ( SL.SLIPTYPE_CODE = 'SWD' ) AND
+( SL.SLIP_STATUS < 1 ) AND
          ( SL.SLIP_DATE BETWEEN $P{adtm_start} AND (TRUNC($P{adtm_end}) + 1) )]]>
 	</queryString>
 	<field name="COOP_NAME" class="java.lang.String"/>
@@ -75,65 +74,97 @@ WHERE    ( SL.SLIPTYPE_CODE = 'SWD' ) AND
 		<variableExpression><![CDATA[$V{order}]]></variableExpression>
 	</variable>
 	<variable name="sumPayoutNetAmt" class="java.math.BigDecimal" calculation="Sum">
-		<variableExpression><![CDATA[$F{PAYOUTNET_AMT} == null 
-      ? java.math.BigDecimal.ZERO 
+		<variableExpression><![CDATA[$F{PAYOUTNET_AMT} == null
+      ? java.math.BigDecimal.ZERO
       : $F{PAYOUTNET_AMT}]]></variableExpression>
 	</variable>
 	<variable name="sumBankFeeAmt" class="java.math.BigDecimal" calculation="Sum">
-		<variableExpression><![CDATA[$F{BANKFEE_AMT} == null 
-      ? java.math.BigDecimal.ZERO 
+		<variableExpression><![CDATA[$F{BANKFEE_AMT} == null
+      ? java.math.BigDecimal.ZERO
       : $F{BANKFEE_AMT}]]></variableExpression>
 	</variable>
 	<background>
 		<band height="32" splitType="Stretch"/>
 	</background>
-	<columnHeader>
-		<band height="113" splitType="Stretch">
+	<pageHeader>
+		<band height="60">
 			<textField>
-				<reportElement x="627" y="16" width="136" height="16" uuid="8485e287-d0d6-4074-9bea-6866ea122265"/>
+				<reportElement uuid="8485e287-d0d6-4074-9bea-6866ea122265" x="576" y="0" width="199" height="20"/>
 				<textElement textAlignment="Right" verticalAlignment="Top">
 					<font fontName="Angsana New" size="13"/>
 				</textElement>
 				<textFieldExpression><![CDATA["หน้าที่ : "]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report">
-				<reportElement x="783" y="16" width="19" height="16" uuid="bd192051-e94d-4564-af5b-72791d9493a7"/>
+				<reportElement uuid="bd192051-e94d-4564-af5b-72791d9493a7" x="795" y="0" width="19" height="20"/>
 				<textElement>
 					<font fontName="Angsana New" size="13"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="763" y="16" width="20" height="16" uuid="2f220a17-ae55-4483-a8cf-c41dad834ef7"/>
+				<reportElement uuid="2f220a17-ae55-4483-a8cf-c41dad834ef7" x="775" y="0" width="20" height="20"/>
 				<textElement textAlignment="Right">
 					<font fontName="Angsana New" size="13"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{PAGE_NUMBER} + "/"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="627" y="0" width="175" height="16" uuid="30b119f7-cf7b-4423-9154-52044b6f436e"/>
+				<reportElement uuid="30b119f7-cf7b-4423-9154-52044b6f436e" x="576" y="20" width="238" height="20"/>
 				<textElement textAlignment="Right" verticalAlignment="Top">
 					<font fontName="Angsana New" size="13"/>
 				</textElement>
 				<textFieldExpression><![CDATA["เวลาที่พิมพ์ : " + new SimpleDateFormat("dd/MM/yyyy",new Locale("th","TH")).format(new Date())]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="0" y="0" width="802" height="20" uuid="f30fb55b-f515-4d70-8dc7-154dfdd94cf1"/>
+				<reportElement uuid="f30fb55b-f515-4d70-8dc7-154dfdd94cf1" x="219" y="20" width="356" height="20"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Browallia New" size="16"/>
 				</textElement>
 				<text><![CDATA[รายงานยกเลิกการถอนหุ้น]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="0" y="40" width="802" height="20" uuid="13550bc4-c498-4d90-aa41-895d8a7d5aab"/>
+				<reportElement uuid="13550bc4-c498-4d90-aa41-895d8a7d5aab" x="219" y="40" width="356" height="20"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Browallia New" size="16"/>
 				</textElement>
 				<textFieldExpression><![CDATA["ตั้งแต่วันที่  " + new SimpleDateFormat("dd/MM/yyyy",new Locale("th","TH")).format($P{adtm_start}) +
 "  ถึงวันที่  " + new SimpleDateFormat("dd/MM/yyyy",new Locale("th","TH")).format($P{adtm_end})]]></textFieldExpression>
 			</textField>
+			<textField>
+				<reportElement uuid="6c46c598-90a4-4862-aeaf-2a9b31fce945" x="3" y="20" width="216" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Browallia New" size="14" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["MBSH-DAY-225"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="907ce66a-7f37-4a3b-ae3e-67dc9e33b9de" x="219" y="0" width="356" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Browallia New" size="16"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COOP_NAME}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="d58c86a2-91a2-448a-a120-ab07f653eb62" x="3" y="0" width="216" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["ระบบสมาชิกและหุ้น"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="c01957d1-8f33-4c32-8efb-98a0b462c9c2" x="3" y="40" width="216" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["รายงานใบคำขอสมัครสมาชิก (ระบุสถานะ)"]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="32" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="80" width="25" height="32" uuid="e7fae923-1bdf-4873-80f6-f2c6fe19c938">
+				<reportElement uuid="e7fae923-1bdf-4873-80f6-f2c6fe19c938" x="0" y="0" width="25" height="32">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box>
@@ -148,7 +179,7 @@ WHERE    ( SL.SLIPTYPE_CODE = 'SWD' ) AND
 				<text><![CDATA[ลำดับ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="25" y="80" width="65" height="32" uuid="debbaa78-3734-4e71-a093-5c03b75c05a9">
+				<reportElement uuid="debbaa78-3734-4e71-a093-5c03b75c05a9" x="25" y="0" width="65" height="32">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box>
@@ -164,7 +195,7 @@ WHERE    ( SL.SLIPTYPE_CODE = 'SWD' ) AND
 วันที่ใบเสร็จ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="90" y="80" width="50" height="32" uuid="50d052bd-ef0b-45f2-b43c-1f1b12d980fa">
+				<reportElement uuid="50d052bd-ef0b-45f2-b43c-1f1b12d980fa" x="90" y="0" width="50" height="32">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box>
@@ -180,7 +211,7 @@ WHERE    ( SL.SLIPTYPE_CODE = 'SWD' ) AND
 ผู้ทำรายการ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="205" y="80" width="110" height="32" uuid="88b04160-634e-4631-af5f-5e3a592fbd2d">
+				<reportElement uuid="88b04160-634e-4631-af5f-5e3a592fbd2d" x="205" y="0" width="110" height="32">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box>
@@ -197,7 +228,7 @@ WHERE    ( SL.SLIPTYPE_CODE = 'SWD' ) AND
 ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="315" y="80" width="95" height="32" uuid="093aa406-15a7-41fd-a91f-93f3e82d8e7e">
+				<reportElement uuid="093aa406-15a7-41fd-a91f-93f3e82d8e7e" x="315" y="0" width="95" height="32">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box>
@@ -212,7 +243,7 @@ WHERE    ( SL.SLIPTYPE_CODE = 'SWD' ) AND
 				<text><![CDATA[ประเภทการจ่าย]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="618" y="80" width="72" height="32" uuid="b0ba7ee8-77e5-44ee-83ad-2703cd99ccd7">
+				<reportElement uuid="b0ba7ee8-77e5-44ee-83ad-2703cd99ccd7" x="618" y="0" width="72" height="32">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box>
@@ -227,7 +258,7 @@ WHERE    ( SL.SLIPTYPE_CODE = 'SWD' ) AND
 				<text><![CDATA[จ่ายออก]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="410" y="80" width="68" height="32" uuid="a288ae1c-4f62-401c-993f-c0e31053218e">
+				<reportElement uuid="a288ae1c-4f62-401c-993f-c0e31053218e" x="410" y="0" width="68" height="32">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box>
@@ -242,7 +273,7 @@ WHERE    ( SL.SLIPTYPE_CODE = 'SWD' ) AND
 				<text><![CDATA[ธนาคาร]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="478" y="80" width="70" height="32" uuid="8439d307-843a-4e37-bc7e-d8fecfe2b127">
+				<reportElement uuid="8439d307-843a-4e37-bc7e-d8fecfe2b127" x="478" y="0" width="70" height="32">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box>
@@ -257,7 +288,7 @@ WHERE    ( SL.SLIPTYPE_CODE = 'SWD' ) AND
 				<text><![CDATA[สาขา]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="548" y="80" width="70" height="32" uuid="dc04c69a-59ed-4cc0-b61b-ea3aa31f76b5">
+				<reportElement uuid="dc04c69a-59ed-4cc0-b61b-ea3aa31f76b5" x="548" y="0" width="70" height="32">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box>
@@ -272,7 +303,7 @@ WHERE    ( SL.SLIPTYPE_CODE = 'SWD' ) AND
 				<text><![CDATA[เลขที่บัญชี]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="690" y="80" width="50" height="32" uuid="6a612083-366c-4908-8368-b8cc61f92992">
+				<reportElement uuid="6a612083-366c-4908-8368-b8cc61f92992" x="690" y="0" width="50" height="32">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box>
@@ -287,7 +318,7 @@ WHERE    ( SL.SLIPTYPE_CODE = 'SWD' ) AND
 				<text><![CDATA[ค่าธรรมเนียม]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="740" y="80" width="71" height="32" uuid="d95d73f2-1658-453c-839c-acf445cc2688">
+				<reportElement uuid="d95d73f2-1658-453c-839c-acf445cc2688" x="740" y="0" width="71" height="32">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box>
@@ -301,22 +332,8 @@ WHERE    ( SL.SLIPTYPE_CODE = 'SWD' ) AND
 				</textElement>
 				<text><![CDATA[จ่ายสุทธิ]]></text>
 			</staticText>
-			<textField>
-				<reportElement x="1" y="-20" width="216" height="20" uuid="6c46c598-90a4-4862-aeaf-2a9b31fce945"/>
-				<textElement verticalAlignment="Middle">
-					<font fontName="Browallia New" size="10" isBold="false"/>
-				</textElement>
-				<textFieldExpression><![CDATA["LNDY0015_2"]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="0" y="20" width="802" height="20" uuid="907ce66a-7f37-4a3b-ae3e-67dc9e33b9de"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Browallia New" size="16"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{COOP_NAME}]]></textFieldExpression>
-			</textField>
 			<staticText>
-				<reportElement x="140" y="80" width="65" height="32" uuid="ed5884aa-5489-412c-b5b3-ba24b01dd560">
+				<reportElement uuid="ed5884aa-5489-412c-b5b3-ba24b01dd560" x="140" y="0" width="65" height="32">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box>
@@ -336,7 +353,7 @@ WHERE    ( SL.SLIPTYPE_CODE = 'SWD' ) AND
 		<band height="32" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField>
-				<reportElement x="0" y="0" width="25" height="32" uuid="d734edf6-8910-449f-83e2-c1ac5f1c013b">
+				<reportElement uuid="d734edf6-8910-449f-83e2-c1ac5f1c013b" x="0" y="0" width="25" height="32">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -345,79 +362,79 @@ WHERE    ( SL.SLIPTYPE_CODE = 'SWD' ) AND
 				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="25" y="0" width="65" height="32" uuid="1615b9c0-0fad-4cb9-a155-ceeb17f70ca2"/>
+				<reportElement uuid="1615b9c0-0fad-4cb9-a155-ceeb17f70ca2" x="25" y="0" width="65" height="32"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="AngsanaUPC" size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy",new Locale ( "th", "TH" )).format($F{OPERATE_DATE}) + "\n" + new SimpleDateFormat("dd/MM/yyyy",new Locale ( "th", "TH" )).format($F{SLIP_DATE})]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="90" y="0" width="50" height="32" uuid="bb898307-ca67-4003-8e7f-e66cb4e93517"/>
+				<reportElement uuid="bb898307-ca67-4003-8e7f-e66cb4e93517" x="90" y="0" width="50" height="32"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="AngsanaUPC" size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{DOCUMENT_NO} + "\n" + $F{ENTRY_ID}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="140" y="0" width="65" height="32" uuid="104d179a-2903-4e57-bac2-b17504c4419c"/>
+				<reportElement uuid="104d179a-2903-4e57-bac2-b17504c4419c" x="140" y="0" width="65" height="32"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="AngsanaUPC" size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{MEMBER_NO}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="205" y="0" width="110" height="32" uuid="45c2f2b8-034c-43b1-9dbc-be354d626a48"/>
+				<reportElement uuid="45c2f2b8-034c-43b1-9dbc-be354d626a48" x="205" y="0" width="110" height="32"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="AngsanaUPC" size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{NAME} + "\n"  + $F{MEMBGROUP_DESC}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement x="315" y="0" width="95" height="32" uuid="e2aea101-c8b6-459c-8581-9d89158d3031"/>
+				<reportElement uuid="e2aea101-c8b6-459c-8581-9d89158d3031" x="315" y="0" width="95" height="32"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="AngsanaUPC" size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{SLIPTYPE_DESC}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement x="410" y="0" width="68" height="32" uuid="8b56c289-b70c-4281-ad0d-966f38719d1d"/>
+				<reportElement uuid="8b56c289-b70c-4281-ad0d-966f38719d1d" x="410" y="0" width="68" height="32"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="AngsanaUPC" size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{BANK_DESC}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement x="478" y="0" width="70" height="32" uuid="e9b1ba8b-ec5d-4572-817c-64c98fdcea5f"/>
+				<reportElement uuid="e9b1ba8b-ec5d-4572-817c-64c98fdcea5f" x="478" y="0" width="70" height="32"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="AngsanaUPC" size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{BRANCH_NAME}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement x="548" y="0" width="70" height="32" uuid="1b7e90dc-26a7-4c58-bd83-c0c39b35a200"/>
+				<reportElement uuid="1b7e90dc-26a7-4c58-bd83-c0c39b35a200" x="548" y="0" width="70" height="32"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="AngsanaUPC" size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{EXPENSE_ACCID}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement x="618" y="0" width="72" height="32" uuid="ac428052-30ef-4c4e-a2a1-43ef2e7474a2"/>
+				<reportElement uuid="ac428052-30ef-4c4e-a2a1-43ef2e7474a2" x="618" y="0" width="72" height="32"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="AngsanaUPC" size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{PAYOUTNET_AMT}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement x="690" y="0" width="50" height="32" uuid="ac8048e8-626a-4fe9-be74-94c30e3d86ff"/>
+				<reportElement uuid="ac8048e8-626a-4fe9-be74-94c30e3d86ff" x="690" y="0" width="50" height="32"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="AngsanaUPC" size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{BANKFEE_AMT} == null 
-      ? java.math.BigDecimal.ZERO 
+				<textFieldExpression><![CDATA[$F{BANKFEE_AMT} == null
+      ? java.math.BigDecimal.ZERO
       : $F{BANKFEE_AMT}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement x="740" y="0" width="71" height="32" uuid="51b3b01f-53d9-46e4-9e52-0ed1aff0f645"/>
+				<reportElement uuid="51b3b01f-53d9-46e4-9e52-0ed1aff0f645" x="740" y="0" width="71" height="32"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="AngsanaUPC" size="12"/>
 				</textElement>
@@ -432,7 +449,7 @@ WHERE    ( SL.SLIPTYPE_CODE = 'SWD' ) AND
 		<band height="27" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<staticText>
-				<reportElement x="414" y="1" width="70" height="16" uuid="b1b7d9f1-43f6-4d6f-b5a9-6d029c63c05e">
+				<reportElement uuid="b1b7d9f1-43f6-4d6f-b5a9-6d029c63c05e" x="414" y="1" width="70" height="16">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
@@ -441,17 +458,17 @@ WHERE    ( SL.SLIPTYPE_CODE = 'SWD' ) AND
 				<text><![CDATA[รวมทั้งสิ้น :]]></text>
 			</staticText>
 			<line>
-				<reportElement x="0" y="0" width="811" height="1" uuid="623a1b33-c832-4fcc-ad7e-2613cf1e9520"/>
+				<reportElement uuid="623a1b33-c832-4fcc-ad7e-2613cf1e9520" x="0" y="0" width="811" height="1"/>
 			</line>
 			<textField>
-				<reportElement x="484" y="1" width="70" height="16" uuid="59c21e2f-d7ce-4eab-91d9-0e4794b5d68b"/>
+				<reportElement uuid="59c21e2f-d7ce-4eab-91d9-0e4794b5d68b" x="484" y="1" width="70" height="16"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="AngsanaUPC" size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{sum_total}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="554" y="1" width="32" height="16" uuid="6d17b144-9e03-43d8-9cb1-c92f66feba15">
+				<reportElement uuid="6d17b144-9e03-43d8-9cb1-c92f66feba15" x="554" y="1" width="32" height="16">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
@@ -460,7 +477,7 @@ WHERE    ( SL.SLIPTYPE_CODE = 'SWD' ) AND
 				<text><![CDATA[รายการ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="586" y="1" width="32" height="16" uuid="3a428a70-876e-4dc8-8d1e-f6ee7ec8c5b3">
+				<reportElement uuid="3a428a70-876e-4dc8-8d1e-f6ee7ec8c5b3" x="586" y="1" width="32" height="16">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -469,24 +486,24 @@ WHERE    ( SL.SLIPTYPE_CODE = 'SWD' ) AND
 				<text><![CDATA[เป็นเงิน]]></text>
 			</staticText>
 			<line>
-				<reportElement x="0" y="16" width="811" height="1" uuid="53f697f2-0ba7-45e1-a138-0444b6363c90"/>
+				<reportElement uuid="53f697f2-0ba7-45e1-a138-0444b6363c90" x="0" y="16" width="811" height="1"/>
 			</line>
 			<textField pattern="#,##0.00">
-				<reportElement x="618" y="1" width="72" height="16" uuid="283ee41f-5509-47ef-baa5-0f2f6fda713d"/>
+				<reportElement uuid="283ee41f-5509-47ef-baa5-0f2f6fda713d" x="618" y="1" width="72" height="16"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="AngsanaUPC" size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{sumPayoutNetAmt} ?: BigDecimal.ZERO]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement x="690" y="1" width="50" height="16" uuid="a448d91c-41ef-4e01-a2b3-cb150c7bae4c"/>
+				<reportElement uuid="a448d91c-41ef-4e01-a2b3-cb150c7bae4c" x="690" y="1" width="50" height="16"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="AngsanaUPC" size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{sumBankFeeAmt} ?: BigDecimal.ZERO]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement x="741" y="1" width="70" height="16" uuid="a0230909-7271-46b4-8f50-a57468b28558"/>
+				<reportElement uuid="a0230909-7271-46b4-8f50-a57468b28558" x="741" y="1" width="70" height="16"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="AngsanaUPC" size="12"/>
 				</textElement>
