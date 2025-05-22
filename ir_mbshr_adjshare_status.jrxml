@@ -5,9 +5,6 @@
 	<property name="ireport.y" value="0"/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="GCOOP"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-	<parameter name="as_coopid" class="java.lang.String">
-		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
-	</parameter>
 	<parameter name="ai_status" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
@@ -17,6 +14,7 @@
 	<parameter name="adtm_end" class="java.util.Date">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
+	<parameter name="as_coop" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[SELECT
     SPA.PAYADJUST_DOCNO,
@@ -57,7 +55,7 @@ LEFT JOIN SHSHAREMASTER     SSM ON SPA.MEMBER_NO       = SSM.MEMBER_NO
 LEFT JOIN SHSHARETYPE       SST ON SSM.SHARETYPE_CODE  = SST.SHARETYPE_CODE
 LEFT JOIN MBUCFMEMBTYPE     MT  ON MM.MEMBTYPE_CODE    = MT.MEMBTYPE_CODE
 WHERE
-  SPA.COOP_ID = $P{as_coopid}
+  SPA.COOP_ID = $P{as_coop}
   AND (
     $P{ai_status} IS NULL
     OR SPA.SHRPAYADJ_STATUS = $P{ai_status}
