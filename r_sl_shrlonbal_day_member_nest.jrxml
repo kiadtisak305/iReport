@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="r_sl_shrlonbal_day_member" language="groovy" pageWidth="396" pageHeight="595" orientation="Landscape" columnWidth="356" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="c3a7bd99-4b8e-4839-88c6-b0ab436c522c">
+	<property name="ireport.zoom" value="1.6500000000000001"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="as_coopid" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="start_group" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="end_group" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select
+lt.loantype_code,
+lt.loantype_desc,
+sum(lnm.principal_balance) as principal_balance
+from
+lncontmaster lnm
+left join lnloantype lt on lnm.loantype_code = lt.loantype_code
+left join mbmembmaster mb on  lnm.member_no = mb.member_no
+left join mbucfmembgroup mg on mb.membgroup_code = mg.membgroup_code
+
+where
+lnm.coop_id = $P{as_coopid} and
+lnm.principal_balance > 0 and
+trim(mg.membgroup_code) between $P{start_group} and $P{end_group}
+group by lt.loantype_desc,lt.loantype_code
+order by lt.loantype_code]]>
+	</queryString>
+	<field name="LOANTYPE_CODE" class="java.lang.String"/>
+	<field name="LOANTYPE_DESC" class="java.lang.String"/>
+	<field name="PRINCIPAL_BALANCE" class="java.math.BigDecimal"/>
+	<variable name="Sum_Prn" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{PRINCIPAL_BALANCE}]]></variableExpression>
+	</variable>
+	<group name="MEMBGROUP_CODE">
+		<groupExpression><![CDATA[]]></groupExpression>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="22" splitType="Stretch">
+			<textField>
+				<reportElement uuid="19705ce6-1ea3-4bf3-8ed1-6ef9cc7e58c3" x="0" y="0" width="248" height="20"/>
+				<textElement>
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{LOANTYPE_DESC}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement uuid="2eecb4fd-927e-4081-9dc4-1baca0781f39" stretchType="RelativeToTallestObject" x="248" y="0" width="108" height="20"/>
+				<textElement textAlignment="Right">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PRINCIPAL_BALANCE}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="20">
+			<textField pattern="#,##0.00">
+				<reportElement uuid="5d315b24-8b5e-4b8d-8a83-ed8f68ee8b8b" x="248" y="0" width="108" height="20"/>
+				<textElement textAlignment="Right">
+					<font fontName="Angsana New" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{Sum_Prn}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

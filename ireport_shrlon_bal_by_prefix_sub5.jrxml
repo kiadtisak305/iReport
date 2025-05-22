@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ireport_shrlon_bal_by_prefix_sub1" language="groovy" pageWidth="555" pageHeight="842" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="439f8b3e-368a-4d9f-bcf6-cfe6885b41c7">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="as_startlntype" class="java.lang.String"/>
+	<parameter name="as_endlntype" class="java.lang.String"/>
+	<parameter name="as_sgroup" class="java.lang.String"/>
+	<parameter name="as_egroup" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select
+count(ln.member_no)as count_memb , sum(ln.principal_balance) as lon_bal
+from lncontmaster ln
+join lnloantype lt on ln.coop_id = lt.coop_id and ln.loantype_code = lt.loantype_code
+join mbmembmaster mb on ln.member_no = mb.member_no and mb.membcat_code in ('10','20')
+where ln.principal_balance > 0
+and lt.loantype_code between $P{as_startlntype} and $P{as_endlntype}
+and mb.membgroup_code between $P{as_sgroup} and $P{as_egroup}]]>
+	</queryString>
+	<field name="COUNT_MEMB" class="java.math.BigDecimal"/>
+	<field name="LON_BAL" class="java.math.BigDecimal"/>
+	<variable name="sumbal" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{LON_BAL}]]></variableExpression>
+	</variable>
+	<variable name="sumcount" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{COUNT_MEMB}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="55">
+			<line>
+				<reportElement uuid="4f2bab38-40bf-45db-9b23-52310f049382" x="348" y="38" width="100" height="1"/>
+			</line>
+			<line>
+				<reportElement uuid="a0b2d658-eecc-4940-9b90-72aff4a00127" x="151" y="39" width="100" height="1"/>
+			</line>
+			<line>
+				<reportElement uuid="7d0732cc-09e3-4560-9358-dfa59d7f737a" x="348" y="34" width="100" height="1"/>
+			</line>
+			<staticText>
+				<reportElement uuid="87e34fa3-129a-4bac-a2f3-6823ca8ec4f1" x="251" y="16" width="30" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ราย]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="4b90f8d3-1551-4832-9994-81dcd1d5c2b0" x="62" y="16" width="89" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[รวมทั้งสิ้น]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="001fde1d-41a3-4e31-b237-785866a6605c" x="151" y="35" width="100" height="1"/>
+			</line>
+			<textField pattern="#,##0">
+				<reportElement uuid="9e88c37a-9ec8-42c9-bac3-ea4656a1435f" x="151" y="15" width="100" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COUNT_MEMB}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="3fb5786f-9d07-4a86-bc10-a93cf3e02ec6" x="448" y="14" width="30" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[บาท]]></text>
+			</staticText>
+			<textField pattern="#,##0.00">
+				<reportElement uuid="7ce84282-d463-463f-a428-d56e8f5d66d9" x="348" y="14" width="100" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{LON_BAL}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="a53d044f-eb67-4a7e-8152-849742b05ddb" x="292" y="15" width="56" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[หนี้รวม]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="a6114b0c-b4de-4942-8829-6aa099f650f0" x="3" y="7" width="541" height="1"/>
+			</line>
+		</band>
+	</detail>
+</jasperReport>
