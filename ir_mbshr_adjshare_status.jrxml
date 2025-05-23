@@ -1,0 +1,836 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ir_mbshr_adjshare_status" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="812" leftMargin="20" rightMargin="10" topMargin="20" bottomMargin="20" uuid="11b63495-83aa-4d7c-80cc-2f6e167bce36">
+	<property name="ireport.zoom" value="1.4641000000000044"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="GCOOP"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="ai_status" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="adtm_start" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="adtm_end" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="as_coop" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT
+    SPA.PAYADJUST_DOCNO,
+    SPA.MEMBER_NO,
+    SPA.PAYADJUST_DATE,
+    SPA.SHARESTK_VALUE * SST.UNITSHARE_VALUE AS SHARESTK_VALUE,
+    SPA.SHRLAST_PERIOD,
+    SPA.PERIODBASE_VALUE,
+    SPA.OLD_PERIODVALUE,
+    SPA.OLD_PAYSTATUS,
+    SPA.NEW_PERIODVALUE,
+    SPA.NEW_PAYSTATUS,
+    SPA.REMARK,
+    SPA.ENTRY_ID,
+    SPA.ENTRY_DATE,
+    SPA.CHGSTOP_FLAG,
+    SPA.CHGLOW_FLAG,
+    PR.PRENAME_DESC,
+    MM.MEMB_NAME,
+    MM.MEMB_SURNAME,
+    MM.SALARY_AMOUNT,
+    MM.MEMBGROUP_CODE,
+    MG.MEMBGROUP_DESC,
+    CC.COOP_NAME,
+    SPA.SHRPAYADJ_STATUS,
+	SPA.CHGADD_FLAG,
+	SPA.CHGLOW_FLAG,
+	SPA.CHGSTOP_FLAG,
+	SPA.CHGCONT_FLAG,
+    MT.MEMBTYPE_CODE,
+    MT.MEMBTYPE_DESC
+FROM SHPAYMENTADJUST   SPA
+LEFT JOIN MBMEMBMASTER      MM  ON SPA.MEMBER_NO       = MM.MEMBER_NO
+LEFT JOIN MBUCFPRENAME      PR  ON MM.PRENAME_CODE     = PR.PRENAME_CODE
+LEFT JOIN MBUCFMEMBGROUP    MG  ON MM.MEMBGROUP_CODE   = MG.MEMBGROUP_CODE
+LEFT JOIN CMCOOPCONSTANT    CC  ON SPA.COOP_ID         = CC.COOP_ID
+LEFT JOIN SHSHAREMASTER     SSM ON SPA.MEMBER_NO       = SSM.MEMBER_NO
+LEFT JOIN SHSHARETYPE       SST ON SSM.SHARETYPE_CODE  = SST.SHARETYPE_CODE
+LEFT JOIN MBUCFMEMBTYPE     MT  ON MM.MEMBTYPE_CODE    = MT.MEMBTYPE_CODE
+WHERE
+  SPA.COOP_ID = $P{as_coop}
+  AND (
+    $P{ai_status} IS NULL
+    OR SPA.SHRPAYADJ_STATUS = $P{ai_status}
+  )
+  AND ( SPA.PAYADJUST_DATE BETWEEN $P{adtm_start} AND (TRUNC($P{adtm_end}) + 1) )]]>
+	</queryString>
+	<field name="PAYADJUST_DOCNO" class="java.lang.String"/>
+	<field name="MEMBER_NO" class="java.lang.String"/>
+	<field name="PAYADJUST_DATE" class="java.sql.Timestamp"/>
+	<field name="SHARESTK_VALUE" class="java.math.BigDecimal"/>
+	<field name="SHRLAST_PERIOD" class="java.math.BigDecimal"/>
+	<field name="PERIODBASE_VALUE" class="java.math.BigDecimal"/>
+	<field name="OLD_PERIODVALUE" class="java.math.BigDecimal"/>
+	<field name="OLD_PAYSTATUS" class="java.math.BigDecimal"/>
+	<field name="NEW_PERIODVALUE" class="java.math.BigDecimal"/>
+	<field name="NEW_PAYSTATUS" class="java.math.BigDecimal"/>
+	<field name="REMARK" class="java.lang.String"/>
+	<field name="ENTRY_ID" class="java.lang.String"/>
+	<field name="ENTRY_DATE" class="java.sql.Timestamp"/>
+	<field name="CHGSTOP_FLAG" class="java.math.BigDecimal"/>
+	<field name="CHGLOW_FLAG" class="java.math.BigDecimal"/>
+	<field name="PRENAME_DESC" class="java.lang.String"/>
+	<field name="MEMB_NAME" class="java.lang.String"/>
+	<field name="MEMB_SURNAME" class="java.lang.String"/>
+	<field name="SALARY_AMOUNT" class="java.math.BigDecimal"/>
+	<field name="MEMBGROUP_CODE" class="java.lang.String"/>
+	<field name="MEMBGROUP_DESC" class="java.lang.String"/>
+	<field name="COOP_NAME" class="java.lang.String"/>
+	<field name="SHRPAYADJ_STATUS" class="java.math.BigDecimal"/>
+	<field name="CHGADD_FLAG" class="java.math.BigDecimal"/>
+	<field name="CHGCONT_FLAG" class="java.math.BigDecimal"/>
+	<field name="MEMBTYPE_CODE" class="java.lang.String"/>
+	<field name="MEMBTYPE_DESC" class="java.lang.String"/>
+	<variable name="Sum_OldPeriodValue" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{OLD_PERIODVALUE} != null
+      ? $F{OLD_PERIODVALUE}
+      : BigDecimal.ZERO]]></variableExpression>
+	</variable>
+	<variable name="Sum_NewPeriodValue" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{NEW_PERIODVALUE} != null
+      ? $F{NEW_PERIODVALUE}
+      : BigDecimal.ZERO]]></variableExpression>
+	</variable>
+	<variable name="Count_AddShare" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[($F{CHGADD_FLAG}  != null && $F{CHGADD_FLAG}.intValue() == 1)
+      ? 1
+      : 0]]></variableExpression>
+	</variable>
+	<variable name="Sum_OldPeriod_AddShare" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[($F{CHGADD_FLAG} != null && $F{CHGADD_FLAG}.intValue() == 1)
+      ? ($F{OLD_PERIODVALUE} != null
+          ? $F{OLD_PERIODVALUE}
+          : BigDecimal.ZERO)
+      : BigDecimal.ZERO]]></variableExpression>
+	</variable>
+	<variable name="Sum_NewPeriod_AddShare" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[($F{CHGADD_FLAG} != null && $F{CHGADD_FLAG}.intValue() == 1)
+      ? ($F{NEW_PERIODVALUE} != null
+          ? $F{NEW_PERIODVALUE}
+          : BigDecimal.ZERO)
+      : BigDecimal.ZERO]]></variableExpression>
+	</variable>
+	<variable name="Count_LowShare" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[($F{CHGLOW_FLAG}   != null && $F{CHGLOW_FLAG}.intValue()   == 1) ? 1 : 0]]></variableExpression>
+	</variable>
+	<variable name="Sum_OldPeriod_LowShare" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[($F{CHGLOW_FLAG} != null && $F{CHGLOW_FLAG}.intValue() == 1)
+      ? ($F{OLD_PERIODVALUE} != null
+          ? $F{OLD_PERIODVALUE}
+          : BigDecimal.ZERO)
+      : BigDecimal.ZERO]]></variableExpression>
+	</variable>
+	<variable name="Sum_NewPeriod_LowShare" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[($F{CHGLOW_FLAG} != null && $F{CHGLOW_FLAG}.intValue() == 1)
+      ? ($F{NEW_PERIODVALUE} != null
+          ? $F{NEW_PERIODVALUE}
+          : BigDecimal.ZERO)
+      : BigDecimal.ZERO]]></variableExpression>
+	</variable>
+	<variable name="Count_StopShare" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[($F{CHGSTOP_FLAG}  != null && $F{CHGSTOP_FLAG}.intValue()  == 1) ? 1 : 0]]></variableExpression>
+	</variable>
+	<variable name="Sum_OldPeriod_StopShare" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[($F{CHGSTOP_FLAG} != null && $F{CHGSTOP_FLAG}.intValue() == 1)
+      ? ($F{OLD_PERIODVALUE} != null
+          ? $F{OLD_PERIODVALUE}
+          : BigDecimal.ZERO)
+      : BigDecimal.ZERO]]></variableExpression>
+	</variable>
+	<variable name="Sum_NewPeriod_StopShare" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[($F{CHGSTOP_FLAG} != null && $F{CHGSTOP_FLAG}.intValue() == 1)
+      ? ($F{NEW_PERIODVALUE} != null
+          ? $F{NEW_PERIODVALUE}
+          : BigDecimal.ZERO)
+      : BigDecimal.ZERO]]></variableExpression>
+	</variable>
+	<variable name="Count_ContShare" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[($F{CHGCONT_FLAG}  != null && $F{CHGCONT_FLAG}.intValue()  == 1) ? 1 : 0]]></variableExpression>
+	</variable>
+	<variable name="Sum_OldPeriod_ContShare" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[($F{CHGCONT_FLAG} != null && $F{CHGCONT_FLAG}.intValue() == 1)
+      ? ($F{OLD_PERIODVALUE} != null
+          ? $F{OLD_PERIODVALUE}
+          : BigDecimal.ZERO)
+      : BigDecimal.ZERO]]></variableExpression>
+	</variable>
+	<variable name="Sum_NewPeriod_ContShare" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[($F{CHGCONT_FLAG} != null && $F{CHGCONT_FLAG}.intValue() == 1)
+      ? ($F{NEW_PERIODVALUE} != null
+          ? $F{NEW_PERIODVALUE}
+          : BigDecimal.ZERO)
+      : BigDecimal.ZERO]]></variableExpression>
+	</variable>
+	<variable name="order" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[$V{REPORT_COUNT}]]></variableExpression>
+	</variable>
+	<variable name="sum_total" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[$V{order}]]></variableExpression>
+	</variable>
+	<variable name="CHG_TYPE" class="java.lang.String">
+		<variableExpression><![CDATA[($F{CHGADD_FLAG}   != null && $F{CHGADD_FLAG}.intValue()   == 1) ? "เพิ่มหุ้น"
+  : ($F{CHGLOW_FLAG}  != null && $F{CHGLOW_FLAG}.intValue()  == 1) ? "ลดหุ้น"
+  : ($F{CHGSTOP_FLAG} != null && $F{CHGSTOP_FLAG}.intValue() == 1) ? "งดส่ง"
+  : ($F{CHGCONT_FLAG} != null && $F{CHGCONT_FLAG}.intValue() == 1) ? "ส่งต่อ"
+  : ""]]></variableExpression>
+	</variable>
+	<pageHeader>
+		<band height="60">
+			<textField>
+				<reportElement uuid="2991ba9a-1fbe-411a-add3-10c3bb7fc3da" x="219" y="0" width="427" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COOP_NAME}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement uuid="fb7055d2-6ed7-47b5-989b-a5685ee57e2a" x="683" y="20" width="129" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA["วันที่พิมพ์ : " + new SimpleDateFormat("dd/MM/yyyy",new Locale ( "th", "TH" )).format(new java.util.Date()) + " " + new SimpleDateFormat("HH:mm:ss",new Locale("th","TH")).format(new Date())]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement uuid="0d0662d0-e0fe-490d-a956-6b7efec1f6e9" x="802" y="0" width="10" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="12" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="401dc214-fed7-4230-8404-2089ef7f06a3" x="683" y="0" width="119" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="12" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["หน้าที่ "+$V{PAGE_NUMBER}+" / "]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="13550bc4-c498-4d90-aa41-895d8a7d5aab" x="219" y="40" width="427" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Browallia New" size="16"/>
+				</textElement>
+				<textFieldExpression><![CDATA["ตั้งแต่วันที่  " + new SimpleDateFormat("dd/MM/yyyy",new Locale("th","TH")).format($P{adtm_start}) +
+"  ถึงวันที่  " + new SimpleDateFormat("dd/MM/yyyy",new Locale("th","TH")).format($P{adtm_end})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="d6c366ce-7755-459f-b25e-42ba078044df" x="0" y="0" width="194" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["ระบบสมาชิกและหุ้น"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="553e6fae-83ef-4cc8-abe0-c046b488c9d2" x="0" y="20" width="194" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["MBSH-DAY-142"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="69d02965-3463-4cb8-a41b-563e6aec0ca9" x="0" y="40" width="194" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["รายงานใบคำขอเปลี่ยนแปลงค่าหุ้น (ระบุสถานะ)"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="a2d1e0e5-b9cd-45cf-ab5d-8485814c11b3" x="219" y="20" width="427" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="16" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" รายงานใบคำขอเปลี่ยนแปลงค่าหุ้น สถานะ : " + ( $P{ai_status} == 1 ? "อนุมัติ" : ( $P{ai_status} == 8 ? "รออนุมัติ" : "ไม่อนุมัติ" ) )]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="32" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="e7fae923-1bdf-4873-80f6-f2c6fe19c938" x="0" y="0" width="25" height="32">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Browallia New" size="13"/>
+				</textElement>
+				<text><![CDATA[ลำดับ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="debbaa78-3734-4e71-a093-5c03b75c05a9" x="25" y="0" width="95" height="32">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Browallia New" size="13"/>
+				</textElement>
+				<text><![CDATA[วันที่ขอ
+เปลี่ยนแปลง]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="50d052bd-ef0b-45f2-b43c-1f1b12d980fa" x="120" y="0" width="50" height="32">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Browallia New" size="13"/>
+				</textElement>
+				<text><![CDATA[เลขที่คำขอ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b5a4a197-975c-45be-b7f0-20552d2b9a96" x="170" y="0" width="65" height="32">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Browallia New" size="13"/>
+				</textElement>
+				<text><![CDATA[เลขสมาชิก]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="88b04160-634e-4631-af5f-5e3a592fbd2d" x="235" y="0" width="135" height="32">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Browallia New" size="13"/>
+				</textElement>
+				<text><![CDATA[ชื่อ - สกุล]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="a288ae1c-4f62-401c-993f-c0e31053218e" x="370" y="0" width="110" height="32">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Browallia New" size="13"/>
+				</textElement>
+				<text><![CDATA[สังกัด]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="8439d307-843a-4e37-bc7e-d8fecfe2b127" x="480" y="0" width="70" height="32">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Browallia New" size="13"/>
+					<paragraph rightIndent="3"/>
+				</textElement>
+				<text><![CDATA[หุ้นสะสม]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="dc04c69a-59ed-4cc0-b61b-ea3aa31f76b5" x="550" y="0" width="80" height="32">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Browallia New" size="13"/>
+				</textElement>
+				<text><![CDATA[ประเภทรายการ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="6a612083-366c-4908-8368-b8cc61f92992" x="630" y="0" width="120" height="16">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Browallia New" size="13"/>
+				</textElement>
+				<text><![CDATA[ยอดส่งหุ้น]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="d95d73f2-1658-453c-839c-acf445cc2688" x="750" y="0" width="60" height="32">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Browallia New" size="13"/>
+				</textElement>
+				<text><![CDATA[ผลต่าง]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="2e41997f-a028-4e7a-9294-64b4d925d9d4" x="690" y="16" width="60" height="16">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Browallia New" size="13"/>
+				</textElement>
+				<text><![CDATA[ใหม่]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="faab0c91-05b1-4410-848c-5176e970955e" x="630" y="16" width="60" height="16">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Browallia New" size="13"/>
+				</textElement>
+				<text><![CDATA[เดิม]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="32" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField>
+				<reportElement uuid="d734edf6-8910-449f-83e2-c1ac5f1c013b" x="0" y="0" width="25" height="32">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="AngsanaUPC" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="1615b9c0-0fad-4cb9-a155-ceeb17f70ca2" x="25" y="0" width="95" height="32"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="AngsanaUPC" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy",new Locale ( "th", "TH" )).format($F{PAYADJUST_DATE})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="bb898307-ca67-4003-8e7f-e66cb4e93517" x="120" y="0" width="50" height="32"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="AngsanaUPC" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PAYADJUST_DOCNO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="104d179a-2903-4e57-bac2-b17504c4419c" x="170" y="0" width="65" height="32"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="AngsanaUPC" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{MEMBER_NO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="45c2f2b8-034c-43b1-9dbc-be354d626a48" x="235" y="0" width="135" height="32">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="AngsanaUPC" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PRENAME_DESC} + " " + $F{MEMB_NAME} + " " +  $F{MEMB_SURNAME}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement uuid="8b56c289-b70c-4281-ad0d-966f38719d1d" x="370" y="0" width="110" height="32"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="AngsanaUPC" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{MEMBGROUP_DESC}.trim()]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement uuid="e9b1ba8b-ec5d-4572-817c-64c98fdcea5f" x="480" y="0" width="70" height="32"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="AngsanaUPC" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SHARESTK_VALUE}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement uuid="ac8048e8-626a-4fe9-be74-94c30e3d86ff" x="630" y="0" width="60" height="32"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="AngsanaUPC" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{OLD_PERIODVALUE}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement uuid="51b3b01f-53d9-46e4-9e52-0ed1aff0f645" x="750" y="0" width="60" height="32">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="AngsanaUPC" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[(
+    $F{NEW_PERIODVALUE} ?: BigDecimal.ZERO
+  ).subtract(
+    (
+      $F{OLD_PAYSTATUS} != null
+      && $F{OLD_PAYSTATUS}.intValue() == 1
+    )
+      ? ($F{OLD_PERIODVALUE} ?: BigDecimal.ZERO)
+      : BigDecimal.ZERO
+  )]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement uuid="bf474695-b9d5-4f47-872c-20e30b8d53ac" x="690" y="0" width="60" height="32"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="AngsanaUPC" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NEW_PERIODVALUE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="1b4afff8-f1fc-49b2-9732-247dbe7c5f7f" x="550" y="0" width="80" height="32"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="AngsanaUPC" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{CHG_TYPE}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="106" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField>
+				<reportElement uuid="51a353b2-1db1-488d-b29e-9edcb702abda" x="370" y="0" width="180" height="20"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["รวมทั้งหมด  " +  $V{sum_total}  + "   รายการ"]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="334036e1-ff74-48fc-8194-d7eecd0c70aa" x="0" y="0" width="810" height="1">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+			</line>
+			<textField>
+				<reportElement uuid="c887a744-3f59-477e-a828-88263672cc57" x="550" y="0" width="80" height="20"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["เพิ่มหุ้น  " +  $V{Count_AddShare}  + "   รายการ"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="590ae376-efc7-41c1-87c2-db5b7798e45a" x="550" y="20" width="80" height="20"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["ส่งต่อ  " +  $V{Count_ContShare} + "   รายการ"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="17e1e1b6-2f68-48ac-9c0d-b1e8c0391edf" x="550" y="40" width="80" height="20"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["ลดหุ้น  " +  $V{Count_LowShare}  + "   รายการ"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="60c2288f-b618-40ad-9020-5f307acae1d3" x="550" y="60" width="80" height="20"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["งดส่ง  " +  $V{Count_StopShare}  + "   รายการ"]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement uuid="57ebf78a-6589-48da-882f-1ab536b86c85" x="630" y="0" width="60" height="20"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{Sum_OldPeriod_AddShare}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement uuid="40677f17-9277-4898-8909-afb3144eec0b" x="630" y="20" width="60" height="20"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{Sum_OldPeriod_ContShare}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement uuid="e3215e52-876d-410a-b1f8-fefc41d53c98" x="630" y="40" width="60" height="20"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{Sum_OldPeriod_LowShare}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement uuid="e6b88965-a4d4-4759-889a-cc08d48d4a0e" x="630" y="60" width="60" height="20"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{Sum_OldPeriod_StopShare}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement uuid="0bee7a2b-677a-43bc-8d85-8d1b7dde7a6b" x="690" y="0" width="60" height="20"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{Sum_NewPeriod_AddShare}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement uuid="bc2f3986-f748-4ec9-9d94-0ba18b3ef07c" x="690" y="20" width="60" height="20"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{Sum_NewPeriod_ContShare}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement uuid="d9a90f9c-ada6-4095-9621-07fd0348199a" x="690" y="40" width="60" height="20"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{Sum_NewPeriod_LowShare}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement uuid="92677861-63fe-40ca-8adf-32b730eb9824" x="690" y="60" width="60" height="20"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{Sum_NewPeriod_StopShare}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement uuid="9457b171-a1c6-4d44-ae71-e0529a1577c3" x="750" y="0" width="60" height="20"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{Sum_OldPeriod_AddShare} - $V{Sum_NewPeriod_AddShare}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement uuid="b76d0928-5fe6-42ca-a16f-e7069ce24af2" x="750" y="20" width="60" height="20"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{Sum_OldPeriod_ContShare} - $V{Sum_NewPeriod_ContShare}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement uuid="6273f72b-a6c2-4909-9796-1674b23d0a4c" x="750" y="40" width="60" height="20"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{Sum_OldPeriod_LowShare} - $V{Sum_NewPeriod_LowShare}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement uuid="7739a64d-8ed8-492e-8591-03b9be8d7dff" x="750" y="60" width="60" height="20"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{Sum_OldPeriod_StopShare} - $V{Sum_NewPeriod_StopShare}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="06cde251-8cfa-454c-8812-62b2ed22e845" x="0" y="80" width="810" height="1">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+			</line>
+			<textField pattern="#,##0.00">
+				<reportElement uuid="6b894a65-b2bf-4b8d-b1be-b7ac1c69287a" x="630" y="80" width="60" height="20"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{Sum_OldPeriodValue}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement uuid="84472ae6-c84d-4ec3-a48d-227eba4bd22e" x="690" y="80" width="60" height="20"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{Sum_NewPeriodValue}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement uuid="c0235be5-4e42-4c89-b5f7-135f813309c2" x="750" y="81" width="60" height="20"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{Sum_OldPeriodValue} - $V{Sum_NewPeriodValue}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="db4a6671-ba50-496d-9814-479c3146eb91" x="0" y="100" width="810" height="1">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+			</line>
+			<line>
+				<reportElement uuid="e5b23f81-425f-46ee-bfa1-555747369837" x="0" y="103" width="810" height="1">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+			</line>
+		</band>
+	</summary>
+</jasperReport>
