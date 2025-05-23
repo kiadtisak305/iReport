@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ir_changecollno_doae_subnew" language="groovy" pageWidth="252" pageHeight="595" orientation="Landscape" columnWidth="252" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="ecdcc504-2980-4957-8917-04a014823101">
+	<property name="ireport.zoom" value="2.5937424601000028"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="contadjust_docno" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select lcc.ref_collno, mbp.prename_desc || mb.memb_name || '  ' || mb.memb_surname as fullname,
+mbg.membgroup_desc
+from lnreqcontadjust lnj
+join lnreqcontadjustcoll lcc on lnj.contadjust_docno = lcc.contadjust_docno
+join mbmembmaster mb on lcc.ref_collno = mb.member_no
+join mbucfprename mbp on mb.prename_code = mbp.prename_code
+join mbucfmembgroup mbg on mb.membgroup_code = mbg.membgroup_code
+where lnj.contadjust_docno = $P{contadjust_docno}
+and lcc.contadjust_type = 'NEW']]>
+	</queryString>
+	<field name="REF_COLLNO" class="java.lang.String"/>
+	<field name="FULLNAME" class="java.lang.String"/>
+	<field name="MEMBGROUP_DESC" class="java.lang.String"/>
+	<detail>
+		<band height="16" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="45" height="16" uuid="403ad05c-3317-4dbe-ada9-af6ce444ac41"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Browallia New" size="13" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{REF_COLLNO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="140" y="0" width="56" height="16" uuid="9e7c76f5-af96-4ea9-a204-ea181a8b04e3"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Browallia New" size="13"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{MEMBGROUP_DESC}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="45" y="0" width="95" height="16" uuid="d45bb86d-3939-4bcb-a3db-32858773cb9a"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Browallia New" size="13"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{FULLNAME}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

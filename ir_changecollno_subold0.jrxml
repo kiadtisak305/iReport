@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ir_changecollno_doae_subold" language="groovy" pageWidth="216" pageHeight="595" orientation="Landscape" columnWidth="216" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="ecdcc504-2980-4957-8917-04a014823101">
+	<property name="ireport.zoom" value="1.7715610000000013"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="contadjust_docno" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select 1 AS SORT, lcc.ref_collno, mbp.prename_desc || mb.memb_name || '  ' || mb.memb_surname as fullname,
+mbg.membgroup_desc,ac.adjustcause_desc
+from lnreqcontadjust lnj
+join lnreqcontadjustcoll lcc on lnj.contadjust_docno = lcc.contadjust_docno
+left join lnucfadjustcause ac on lcc.adjustcause_code = ac.adjustcause_code
+join mbmembmaster mb on lcc.ref_collno = mb.member_no
+join mbucfprename mbp on mb.prename_code = mbp.prename_code
+join mbucfmembgroup mbg on mb.membgroup_code = mbg.membgroup_code
+
+where lnj.contadjust_docno =  $P{contadjust_docno}   and lcc.ref_collno not in
+(select llcc.ref_collno from lnreqcontadjust llnj join lnreqcontadjustcoll llcc on llnj.contadjust_docno = llcc.contadjust_docno
+where llnj.contadjust_docno = lnj.contadjust_docno and llcc.contadjust_type = 'NEW' )
+and lcc.contadjust_type = 'OLD'
+UNION
+select 2 AS SORT, lcc.ref_collno, mbp.prename_desc || mb.memb_name || '  ' || mb.memb_surname as fullname,
+mbg.membgroup_desc,ac.adjustcause_desc
+from lnreqcontadjust lnj
+join lnreqcontadjustcoll lcc on lnj.contadjust_docno = lcc.contadjust_docno
+join mbmembmaster mb on lcc.ref_collno = mb.member_no
+join mbucfprename mbp on mb.prename_code = mbp.prename_code
+join mbucfmembgroup mbg on mb.membgroup_code = mbg.membgroup_code
+left join lnucfadjustcause ac on lcc.adjustcause_code = ac.adjustcause_code
+where lnj.contadjust_docno = $P{contadjust_docno}  and lcc.ref_collno  in
+(select llcc.ref_collno from lnreqcontadjust llnj join lnreqcontadjustcoll llcc on llnj.contadjust_docno = llcc.contadjust_docno
+where llnj.contadjust_docno = lnj.contadjust_docno and llcc.contadjust_type = 'NEW' )
+and lcc.contadjust_type = 'OLD']]>
+	</queryString>
+	<field name="SORT" class="java.math.BigDecimal"/>
+	<field name="REF_COLLNO" class="java.lang.String"/>
+	<field name="FULLNAME" class="java.lang.String"/>
+	<field name="MEMBGROUP_DESC" class="java.lang.String"/>
+	<field name="ADJUSTCAUSE_DESC" class="java.lang.String"/>
+	<detail>
+		<band height="16" splitType="Stretch">
+			<textField>
+				<reportElement x="45" y="0" width="95" height="16" uuid="76ae87c1-12dd-417e-a698-fe7736f358b0"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Browallia New" size="13"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{FULLNAME}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="45" height="16" uuid="a2fa4235-cd40-4c47-839a-dc8866983fff"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Browallia New" size="13"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{REF_COLLNO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="140" y="0" width="70" height="16" uuid="17a10c9e-8af0-426c-8a10-7de37874c01c"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Browallia New" size="13"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{MEMBGROUP_DESC}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>
