@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="r_sl_clsdaybalance" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="5361c7bd-fe3d-4e92-8a86-a1e0a3ef8cfb">
-	<property name="ireport.zoom" value="1.771561000000001"/>
+	<property name="ireport.zoom" value="1.6105100000000023"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="adtm_date" class="java.util.Date">
@@ -135,7 +135,7 @@ order by  slcls.shrloantype_code]]>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="79" splitType="Stretch">
+		<band height="80" splitType="Stretch">
 			<textField>
 				<reportElement uuid="5c859d2a-24a1-4167-8a7f-9ed6d4eea50a" x="0" y="0" width="802" height="20"/>
 				<textElement textAlignment="Center">
@@ -144,7 +144,7 @@ order by  slcls.shrloantype_code]]>
 				<textFieldExpression><![CDATA[$F{COOP_NAME}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement uuid="1f8281b4-05e1-4cd6-8543-ab411ffece3f" x="0" y="59" width="268" height="20"/>
+				<reportElement uuid="1f8281b4-05e1-4cd6-8543-ab411ffece3f" x="0" y="60" width="268" height="20"/>
 				<box>
 					<topPen lineWidth="0.5"/>
 					<bottomPen lineWidth="0.5"/>
@@ -155,7 +155,7 @@ order by  slcls.shrloantype_code]]>
 				<text><![CDATA[รายละเอียด]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="fb25806c-3ead-4ff0-949d-9065c4fbcbbb" x="268" y="59" width="62" height="20"/>
+				<reportElement uuid="fb25806c-3ead-4ff0-949d-9065c4fbcbbb" x="268" y="60" width="62" height="20"/>
 				<box>
 					<topPen lineWidth="0.5"/>
 					<bottomPen lineWidth="0.5"/>
@@ -166,7 +166,7 @@ order by  slcls.shrloantype_code]]>
 				<text><![CDATA[จำนวน]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="0180c9dd-9ba3-4513-be1a-b07c77e2ebba" x="330" y="59" width="118" height="20"/>
+				<reportElement uuid="0180c9dd-9ba3-4513-be1a-b07c77e2ebba" x="330" y="60" width="118" height="20"/>
 				<box>
 					<topPen lineWidth="0.5"/>
 					<bottomPen lineWidth="0.5"/>
@@ -177,7 +177,7 @@ order by  slcls.shrloantype_code]]>
 				<text><![CDATA[ยอดยกมา]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="101b7446-0a75-4b24-a482-f3877587e18a" x="448" y="59" width="110" height="20"/>
+				<reportElement uuid="101b7446-0a75-4b24-a482-f3877587e18a" x="448" y="60" width="110" height="20"/>
 				<box>
 					<topPen lineWidth="0.5"/>
 					<bottomPen lineWidth="0.5"/>
@@ -188,7 +188,7 @@ order by  slcls.shrloantype_code]]>
 				<text><![CDATA[จ่าย]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="3b66da0a-816f-41cb-a4e6-c8c6c402d3c4" x="558" y="59" width="110" height="20"/>
+				<reportElement uuid="3b66da0a-816f-41cb-a4e6-c8c6c402d3c4" x="558" y="60" width="110" height="20"/>
 				<box>
 					<topPen lineWidth="0.5"/>
 					<bottomPen lineWidth="0.5"/>
@@ -199,7 +199,7 @@ order by  slcls.shrloantype_code]]>
 				<text><![CDATA[รับ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="27b00c4f-a347-4701-959f-93fe2e24a475" x="668" y="59" width="134" height="20"/>
+				<reportElement uuid="27b00c4f-a347-4701-959f-93fe2e24a475" x="668" y="60" width="134" height="20"/>
 				<box>
 					<topPen lineWidth="0.5"/>
 					<bottomPen lineWidth="0.5"/>
@@ -216,19 +216,68 @@ order by  slcls.shrloantype_code]]>
 				</textElement>
 				<textFieldExpression><![CDATA["รายงานสรุปหุ้นหนี้คงเหลือ ประจำวันที่ " + new SimpleDateFormat("d MMMMM G yyyy",new Locale("th","TH")).format($P{adtm_date})]]></textFieldExpression>
 			</textField>
-			<textField pattern="dd/MM/yyyy">
-				<reportElement uuid="8a1352a8-3cb1-442a-a78f-644b46c9475e" x="703" y="0" width="99" height="20"/>
-				<textElement textAlignment="Right">
+			<textField>
+				<reportElement uuid="341f9639-9c6a-4435-b916-ea67d209e33a" x="626" y="40" width="136" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Angsana New" size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA["วันที่ "+new SimpleDateFormat("dd/MM/yyyy",new Locale("th","TH")).format(new Date())]]></textFieldExpression>
+				<textFieldExpression><![CDATA["เวลาที่พิมพ์ : "]]></textFieldExpression>
+			</textField>
+			<textField pattern="HH:mm:ss">
+				<reportElement uuid="413955c7-c42c-4b00-891e-3a0811041a4c" x="762" y="40" width="39" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="56e917b9-b5a4-44b1-be18-e7b0a306db59" x="703" y="21" width="99" height="19"/>
-				<textElement textAlignment="Right">
+				<reportElement uuid="98386bdf-5257-4728-920d-d9348ab2a238" x="626" y="20" width="175" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Angsana New" size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA["เวลา "+new SimpleDateFormat("HH:ss",new Locale("th","TH")).format(new Date())]]></textFieldExpression>
+				<textFieldExpression><![CDATA["วันที่พิมพ์ : " + new SimpleDateFormat("dd/MM/yyyy",new Locale("th","TH")).format(new Date())]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement uuid="6d6c83dc-1d44-4af2-9698-567673460599" x="782" y="0" width="19" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="56b1101d-ab89-4b11-8bc2-d6c5a7deb15e" x="626" y="0" width="136" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["หน้าที่ : "]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="2e172ffe-0748-426b-a178-15ef7377d676" x="762" y="0" width="20" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER} + "/"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="e51f2b98-cca1-45ce-8069-6741531322f6" x="0" y="40" width="201" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["รายสรุปหุ้น - หนี้คงเหลือหลังปิดสิ้นวัน"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="bfb1c9e3-ae8b-4b3f-a040-3738ff3cb8be" x="0" y="20" width="86" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["[LNDY00006]"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="a519bfdb-2348-4f9a-8ea4-d3ee0d8ea669" x="0" y="0" width="86" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["ระบบสินเชื่อ"]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>

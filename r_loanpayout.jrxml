@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="r_loandetail_net" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="9b0edd28-9d89-46b3-90e4-3e93ea2ba46e">
-	<property name="ireport.zoom" value="2.1435888100000056"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.zoom" value="1.7715610000000044"/>
+	<property name="ireport.x" value="21"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="adtm_start" class="java.util.Date">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
@@ -29,7 +29,7 @@ lnt.prefix,
 s.slip_date,
 s.member_no,
 s.loancontract_no,
-ft_getmemname(s.coop_id , s.member_no) as fullname,
+ft_getmbname(s.coop_id , s.member_no) as fullname,
 mb.membgroup_code,
 mg.membgroup_desc,
 ln.loanapprove_amt,
@@ -195,7 +195,7 @@ order by s.shrlontype_code,ln.loancontract_no ,ln.member_no]]>
 		<band splitType="Stretch"/>
 	</background>
 	<pageHeader>
-		<band height="60" splitType="Stretch">
+		<band height="79" splitType="Stretch">
 			<textField>
 				<reportElement uuid="405c4cb8-178d-4897-a87a-4bc4ab7547fa" x="0" y="20" width="802" height="20"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -211,32 +211,74 @@ order by s.shrlontype_code,ln.loancontract_no ,ln.member_no]]>
 				<textFieldExpression><![CDATA[$F{COOP_NAME}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="1d3fa833-6708-4ff0-918b-8636940e5fd5" x="0" y="40" width="802" height="20"/>
+				<reportElement uuid="1d3fa833-6708-4ff0-918b-8636940e5fd5" x="0" y="40" width="802" height="39"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Angsana New" size="14" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["ตั้งแต่สังกัด " + $P{smemgroup_code} + " ถึงสังกัด " + $P{ememgroup_code}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="a1c9783d-295f-4e1e-ab88-9ca6401c1d3c" x="647" y="21" width="156" height="20"/>
-				<textElement textAlignment="Right">
+				<reportElement uuid="81b2b850-2746-41fa-8c26-307c4636f0bf" x="626" y="40" width="136" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Angsana New" size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA["ณ วันที่ : "+new SimpleDateFormat("dd/MM/yyyy",new Locale("th","TH")).format(new Date())]]></textFieldExpression>
+				<textFieldExpression><![CDATA["เวลาที่พิมพ์ : "]]></textFieldExpression>
+			</textField>
+			<textField pattern="HH:mm:ss">
+				<reportElement uuid="17a2d8ad-f9b0-4294-a505-cecc599952a3" x="762" y="40" width="39" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report">
-				<reportElement uuid="901acc25-5c4d-4db1-bcbf-0065a02ee003" x="760" y="0" width="43" height="20"/>
-				<textElement textAlignment="Left">
-					<font fontName="Angsana New" size="14"/>
+				<reportElement uuid="8c39ac17-c2fd-41b7-9c19-fd6c73cb12ac" x="782" y="0" width="19" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="06862028-da50-4fe1-9711-6b102572e3cb" x="647" y="0" width="113" height="20"/>
-				<textElement textAlignment="Right">
-					<font fontName="Angsana New" size="14"/>
+				<reportElement uuid="cfa4276e-585b-49a3-a621-40e5babb75ed" x="762" y="0" width="20" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA["หน้าที่ : "+$V{PAGE_NUMBER}+"/"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER} + "/"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="2b8a2f07-3913-476c-b25e-6b7a7b681c79" x="626" y="0" width="136" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["หน้าที่ : "]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="c76f3a88-1122-4504-a85b-56337c69c796" x="626" y="20" width="175" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Angsana New" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["วันที่พิมพ์ : " + new SimpleDateFormat("dd/MM/yyyy",new Locale("th","TH")).format(new Date())]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="77701775-f466-40bd-a588-d9ef849ad814" x="0" y="0" width="86" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["ระบบสินเชื่อ"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="aa626e6a-1b03-4d85-8674-f717ba256a70" x="0" y="20" width="86" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["[LNDY00004]"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="61965607-b53b-4613-98c6-b14935723ea4" x="0" y="40" width="201" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Angsana New" size="14" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["รายงานการจ่ายเงินกู้ประจำวัน"]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ir_loan_reqloan_aero_new2" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="82506ec1-ad34-4c09-8af8-bcbe0627e231">
-	<property name="ireport.zoom" value="2.593742460100025"/>
+	<property name="ireport.zoom" value="1.6105100000000154"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="as_scoop" class="java.lang.String">
@@ -305,7 +305,7 @@ order by lnq.loantype_code asc,lnq.loanrequest_date asc,  lnq.loanrequest_docno 
 				<text><![CDATA[อนุมัติ]]></text>
 			</staticText>
 			<textField>
-				<reportElement uuid="e81e0d38-20e7-45f1-afd9-b76617d23556" x="0" y="40" width="802" height="20"/>
+				<reportElement uuid="e81e0d38-20e7-45f1-afd9-b76617d23556" x="0" y="40" width="802" height="39"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Angsana New" size="14" isBold="true"/>
 				</textElement>
@@ -351,7 +351,7 @@ order by lnq.loantype_code asc,lnq.loanrequest_date asc,  lnq.loanrequest_docno 
 				<textElement verticalAlignment="Middle">
 					<font fontName="Angsana New" size="14" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA["[LNDY00001]"]]></textFieldExpression>
+				<textFieldExpression><![CDATA["[LNDY00002]"]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement uuid="344f55cb-7ca8-426d-b776-6c12e73f5885" x="0" y="0" width="86" height="20"/>
